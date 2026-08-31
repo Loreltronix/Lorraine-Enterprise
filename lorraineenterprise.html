@@ -1136,10 +1136,10 @@
                 <a class="active" data-page="home">Home</a>
                 <a data-page="electronics">Lorraine Electronics</a>
                 <a data-page="enterprise">Lorraine Enterprise</a>
-                <a data-page="products">Products</a>
-                <a data-page="services">Services</a>
-                <a data-page="about">About</a>
-                <a data-page="contact">Contact</a>
+                <a href="/products">Products</a>
+                <a href="/services">Services</a>
+                <a href="/about">About</a>
+                <a href="/contact">Contact</a>
                 <a data-page="track">Track Order</a>
                 <a class="nav-cta" id="orderNowNav"><i class="fas fa-shopping-bag"></i> Order Now</a>
                 <a id="authNavLink" data-page="login">Login</a>
@@ -1601,13 +1601,13 @@
             </div>
             <div>
                 <h4>Quick Links</h4>
-                <a data-page="home">Home</a>
+                <a href="/">Home</a>
                 <a data-page="electronics">Lorraine Electronics</a>
                 <a data-page="enterprise">Lorraine Enterprise</a>
-                <a data-page="products">Products</a>
-                <a data-page="services">Services</a>
-                <a data-page="about">About</a>
-                <a data-page="contact">Contact</a>
+                <a href="/products">Products</a>
+                <a href="/services">Services</a>
+                <a href="/about">About</a>
+                <a href="/contact">Contact</a>
                 <a data-page="track">Track Order</a>
             </div>
             <div>
@@ -2689,4 +2689,43 @@
         console.log('🔑 Password: Admin@2026');
     </script>
 </body>
-</html>
+</html><script>
+// Navigation handler
+document.addEventListener('DOMContentLoaded', function() {
+    // Get all navigation links
+    const navLinks = document.querySelectorAll('a[data-page]');
+    
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const page = this.getAttribute('data-page');
+            if (page) {
+                switchPage(page);
+            }
+        });
+    });
+    
+    // Also handle regular links
+    const regularLinks = document.querySelectorAll('nav a:not([data-page])');
+    regularLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const text = this.textContent.trim();
+            const pageMap = {
+                'Home': 'home',
+                'Lorraine Electronics': 'electronics',
+                'Lorraine Enterprise': 'enterprise',
+                'Products': 'products',
+                'Services': 'services',
+                'About': 'about',
+                'Contact': 'contact',
+                'Track Order': 'track-order'
+            };
+            const page = pageMap[text];
+            if (page) {
+                switchPage(page);
+            }
+        });
+    });
+});
+</script>

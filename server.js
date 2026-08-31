@@ -460,3 +460,35 @@ if (process.env.NODE_ENV !== 'production') {
         console.log(`🔑 Password: Admin@2026`);
     });
 }
+
+// ============================================================
+// PAGE ROUTES
+// ============================================================
+
+app.get('/products', (req, res) => {
+    res.sendFile(path.join(__dirname, 'lorraineenterprise.html'));
+});
+
+app.get('/services', (req, res) => {
+    res.sendFile(path.join(__dirname, 'lorraineenterprise.html'));
+});
+
+app.get('/about', (req, res) => {
+    res.sendFile(path.join(__dirname, 'lorraineenterprise.html'));
+});
+
+app.get('/contact', (req, res) => {
+    res.sendFile(path.join(__dirname, 'lorraineenterprise.html'));
+});
+
+app.get('/track-order', (req, res) => {
+    res.sendFile(path.join(__dirname, 'lorraineenterprise.html'));
+});
+
+app.get('/electronics', (req, res) => {
+    res.sendFile(path.join(__dirname, 'lorraineenterprise.html'));
+});
+
+app.get('/enterprise', (req, res) => {
+    res.sendFile(path.join(__dirname, 'lorraineenterprise.html'));
+});
