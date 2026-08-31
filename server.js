@@ -1,62 +1,85 @@
 const express = require('express');
+const path = require('path');
+const { neon } = require('@neondatabase/serverless');
+
 const app = express();
+app.use(express.json());
+app.use(express.static(__dirname));
 
 let sql = null;
-let dbStatus = 'Not initialized';
-
 try {
-    const { neon } = require('@neondatabase/serverless');
-    
-    // Try multiple possible environment variable names
-    const connectionString = process.env.DATABASE__UNPOOLED || 
-                            process.env.DATABASE_URL || 
-                            process.env.POSTGRES_URL;
-    
-    console.log('🔑 Connection string:', connectionString ? '✅ Found' : '❌ Not found');
-    
+    const connectionString = process.env.DATABASE__UNPOOLED;
     if (connectionString) {
         sql = neon(connectionString);
-        dbStatus = '✅ Database connected!';
         console.log('✅ Database connected');
-    } else {
-        dbStatus = '⚠️ DATABASE__UNPOOLED not set';
-        console.log('⚠️ No connection string found');
-        console.log('Available env vars:', Object.keys(process.env).filter(k => k.includes('DATABASE') || k.includes('POSTGRES')));
     }
 } catch (error) {
-    dbStatus = '❌ Database error: ' + error.message;
-    console.error('❌ Database error:', error.message);
+    console.error('Database error:', error.message);
 }
 
-app.get('/', async (req, res) => {
+// Serve your FULL HTML file (not index.html)
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'lorraineenterprise.html'));
+});
+
+// API endpoints
+app.get('/api/status', async (req, res) => {
     try {
         if (!sql) {
-            return res.json({
-                message: '✅ Lorraine Enterprise is alive!',
-                status: 'Server is running',
-                database: dbStatus,
-                hint: 'Set DATABASE__UNPOOLED in Vercel environment variables'
-            });
+            return res.json({ status: 'Database not connected' });
         }
-        
         const result = await sql`SELECT 'Connected to Neon!' as message;`;
         res.json({ 
-            message: '✅ Lorraine Enterprise is live!',
-            database: result[0].message,
             status: '✅ Database connected!',
-            timestamp: new Date().toISOString()
+            message: result[0].message
         });
     } catch (error) {
-        console.error('Query error:', error);
-        res.json({
-            message: '✅ Server is running',
-            database: '❌ Query failed',
-            error: error.message,
-            status: 'Database error but server is alive'
-        });
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.post('/api/comments', async (req, res) => {
+    try {
+        const { comment } = req.body;
+        if (!comment) {
+            return res.status(400).json({ error: 'Comment is required' });
+        }
+        await sql`INSERT INTO comments (comment) VALUES (${comment});`;
+        res.json({ message: 'Comment added successfully!', comment });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/api/comments', async (req, res) => {
+    try {
+        const comments = await sql`SELECT * FROM comments ORDER BY id DESC;`;
+        res.json({ comments });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get('/setup', async (req, res) => {
+    try {
+        await sql`
+            CREATE TABLE IF NOT EXISTS comments (
+                id SERIAL PRIMARY KEY,
+                comment TEXT,
+                created_at TIMESTAMP DEFAULT NOW()
+            );
+        `;
+        res.json({ message: '✅ Table created successfully!' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 });
 
 app.get('/favicon.ico', (req, res) => res.status(204).end());
+
+// Handle other routes (for SPA or additional pages)
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'lorraineenterprise.html'));
+});
 
 module.exports = app;
