@@ -1,9 +1,2678 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta http-equiv="refresh" content="0; url=lorraineenterprise.html" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lorraine — Electronics & Enterprise</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+    <style>
+        /* ===== COMPLETE STYLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f6f9fc;
+            color: #0b1a2f;
+            line-height: 1.6;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        ul {
+            list-style: none;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background: #0b1a2f;
+            color: #fff;
+            padding: 12px 32px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+        .btn-primary:hover {
+            background: #1e3857;
+            transform: translateY(-2px);
+        }
+        .btn-primary i {
+            margin-right: 8px;
+        }
+
+        .btn-secondary {
+            display: inline-block;
+            background: transparent;
+            color: #0b1a2f;
+            padding: 10px 28px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: 2px solid #0b1a2f;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+        .btn-secondary:hover {
+            background: #0b1a2f;
+            color: #fff;
+        }
+
+        .btn-accent {
+            display: inline-block;
+            background: #2563eb;
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+        .btn-accent:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        .btn-whatsapp {
+            display: inline-block;
+            background: #25d366;
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+        .btn-whatsapp:hover {
+            background: #1ebe5c;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #dc2626;
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+
+        .btn-sm {
+            padding: 6px 14px;
+            font-size: 0.8rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Header */
+        header {
+            background: #ffffff;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 10px 0;
+        }
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .logo {
+            font-weight: 800;
+            font-size: 1.4rem;
+            letter-spacing: -0.5px;
+        }
+        .logo span {
+            color: #2563eb;
+        }
+        .logo small {
+            font-size: 0.6rem;
+            font-weight: 500;
+            color: #64748b;
+            margin-left: 6px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            color: #1e293b;
+            transition: color 0.2s;
+            padding: 4px 0;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+        }
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #2563eb;
+            border-bottom-color: #2563eb;
+        }
+        .nav-links .nav-cta {
+            background: #0b1a2f;
+            color: #fff;
+            padding: 6px 16px;
+            border-radius: 40px;
+            border-bottom: none;
+        }
+        .nav-links .nav-cta:hover {
+            background: #1e3857;
+            color: #fff;
+            border-bottom: none;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .cart-icon {
+            position: relative;
+            font-size: 1.2rem;
+            color: #0b1a2f;
+            cursor: pointer;
+        }
+        .cart-count {
+            position: absolute;
+            top: -10px;
+            right: -12px;
+            background: #2563eb;
+            color: #fff;
+            border-radius: 50%;
+            font-size: 0.6rem;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .mobile-toggle {
+            display: none;
+            font-size: 1.3rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #0b1a2f;
+        }
+
+        /* Pages */
+        .page {
+            display: none;
+            animation: fadeUp 0.3s ease;
+        }
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeUp {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Hero */
+        .hero {
+            padding: 50px 0 40px;
+            background: linear-gradient(145deg, #ffffff 0%, #f1f5f9 100%);
+            border-bottom: 1px solid #e9edf2;
+        }
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+        .hero h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            line-height: 1.15;
+            letter-spacing: -1px;
+            margin-bottom: 14px;
+        }
+        .hero h1 span {
+            color: #2563eb;
+        }
+        .hero p {
+            font-size: 1.05rem;
+            color: #334155;
+            max-width: 480px;
+            margin-bottom: 24px;
+        }
+        .hero-btns {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+        .hero-image {
+            background: #dce3ed;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            color: #4b5a6a;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%234b5a6a" width="70px" height="70px"><path d="M4 6h16v13H4V6zm2 2v9h12V8H6zm2 2h8v5H8v-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 70px;
+        }
+
+        /* Dual CTA */
+        .dual-cta {
+            padding: 40px 0;
+            background: #fff;
+        }
+        .dual-cta-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+        }
+        .dual-card {
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 32px 28px;
+            border: 1px solid #eef2f6;
+            transition: 0.3s;
+            text-align: center;
+        }
+        .dual-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+        }
+        .dual-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        .dual-card h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        .dual-card p {
+            color: #475569;
+            margin-bottom: 16px;
+            font-size: 0.95rem;
+        }
+        .dual-card .badge-label {
+            display: inline-block;
+            background: #2563eb;
+            color: #fff;
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 3px 14px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+        .dual-card.electronics .badge-label {
+            background: #0b1a2f;
+        }
+        .dual-card.enterprise .badge-label {
+            background: #2563eb;
+        }
+
+        /* Benefits */
+        .benefits {
+            padding: 40px 0;
+            background: #fff;
+        }
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 20px;
+        }
+        .benefit-card {
+            text-align: center;
+            padding: 20px 12px;
+            border-radius: 14px;
+            background: #f8fafc;
+            transition: 0.2s;
+        }
+        .benefit-card i {
+            font-size: 1.8rem;
+            color: #2563eb;
+            margin-bottom: 6px;
+        }
+        .benefit-card h4 {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        .benefit-card p {
+            font-size: 0.8rem;
+            color: #475569;
+            margin-top: 4px;
+        }
+
+        /* Catalogue */
+        .catalogue {
+            padding: 40px 0;
+        }
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+        }
+        .section-sub {
+            color: #475569;
+            margin-bottom: 28px;
+        }
+
+        .catalogue-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-bottom: 28px;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .search-box {
+            display: flex;
+            border: 1px solid #d1d9e6;
+            border-radius: 40px;
+            overflow: hidden;
+            background: #fff;
+        }
+        .search-box input {
+            border: none;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            width: 200px;
+            outline: none;
+        }
+        .search-box button {
+            background: none;
+            border: none;
+            padding: 0 14px;
+            color: #475569;
+            cursor: pointer;
+        }
+        .filter-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .filter-group select {
+            padding: 8px 14px;
+            border-radius: 40px;
+            border: 1px solid #d1d9e6;
+            background: #fff;
+            font-weight: 500;
+            font-size: 0.85rem;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 24px;
+        }
+
+        .product-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 16px 16px 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            border: 1px solid #eef2f6;
+            transition: 0.25s;
+            display: flex;
+            flex-direction: column;
+        }
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+        }
+        .product-image {
+            height: 140px;
+            background: #eef2f6;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: #64748b;
+        }
+        .product-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        .product-card .category-tag {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #2563eb;
+            font-weight: 600;
+            margin: 2px 0 4px;
+        }
+        .product-card .price {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin: 6px 0 4px;
+        }
+        .product-card .short-desc {
+            font-size: 0.85rem;
+            color: #475569;
+            flex: 1;
+            margin-bottom: 10px;
+        }
+        .product-card .card-actions {
+            display: flex;
+            gap: 6px;
+            margin-top: 6px;
+            flex-wrap: wrap;
+        }
+        .product-card .card-actions .btn-accent,
+        .product-card .card-actions .btn-whatsapp {
+            font-size: 0.75rem;
+            padding: 5px 12px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #dcfce7;
+            color: #166534;
+            font-size: 0.65rem;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        .badge.out {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .badge.service {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 40px 0;
+            background: #fff;
+        }
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .testimonial-card {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid #eef2f6;
+        }
+        .testimonial-card p {
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+        .testimonial-card .author {
+            font-weight: 600;
+            margin-top: 10px;
+            font-size: 0.85rem;
+        }
+
+        /* Quick Order */
+        .quick-order {
+            padding: 40px 0;
+            background: #f1f5f9;
+        }
+        .quick-order-inner {
+            max-width: 560px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .quick-order-inner .btn-whatsapp {
+            font-size: 1rem;
+            padding: 14px 40px;
+        }
+
+        /* Contact */
+        .contact-page {
+            padding: 40px 0;
+        }
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        .contact-info h3 {
+            margin-top: 14px;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        .contact-info a {
+            display: block;
+            margin: 3px 0;
+            color: #2563eb;
+        }
+        .contact-info .social-links {
+            display: flex;
+            gap: 14px;
+            margin-top: 10px;
+        }
+        .contact-info .social-links a {
+            font-size: 1.6rem;
+            color: #0b1a2f;
+            transition: 0.2s;
+        }
+        .contact-info .social-links a:hover {
+            color: #2563eb;
+        }
+
+        .contact-form input,
+        .contact-form textarea,
+        .contact-form select {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid #d1d9e6;
+            font-family: inherit;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        .contact-form textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Auth Forms */
+        .auth-form {
+            max-width: 420px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 32px 28px;
+            border-radius: 20px;
+            border: 1px solid #eef2f6;
+        }
+        .auth-form h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .auth-form input {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid #d1d9e6;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+        .auth-form .btn-primary {
+            width: 100%;
+            text-align: center;
+        }
+        .auth-form .auth-link {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 0.9rem;
+        }
+        .auth-form .auth-link a {
+            color: #2563eb;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Cart */
+        .cart-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: none;
+            justify-content: flex-end;
+        }
+        .cart-overlay.open {
+            display: flex;
+        }
+        .cart-sidebar {
+            background: #fff;
+            width: 420px;
+            max-width: 92vw;
+            height: 100%;
+            padding: 24px 20px;
+            overflow-y: auto;
+            box-shadow: -8px 0 30px rgba(0, 0, 0, 0.08);
+        }
+        .cart-sidebar h2 {
+            font-size: 1.3rem;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .cart-sidebar .close-cart {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+        }
+        .cart-item {
+            display: flex;
+            gap: 10px;
+            padding: 12px 0;
+            border-bottom: 1px solid #eef2f6;
+            align-items: center;
+        }
+        .cart-item-info {
+            flex: 1;
+        }
+        .cart-item-info h4 {
+            font-size: 0.9rem;
+        }
+        .cart-item-info .price {
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .cart-item input[type="number"] {
+            width: 48px;
+            padding: 4px 6px;
+            border-radius: 6px;
+            border: 1px solid #d1d9e6;
+            text-align: center;
+        }
+        .cart-item .remove-item {
+            color: #b91c1c;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .cart-total {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin: 16px 0;
+            text-align: right;
+        }
+        .checkout-btn {
+            width: 100%;
+            padding: 12px;
+            background: #0b1a2f;
+            color: #fff;
+            border: none;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .checkout-btn:hover {
+            background: #1e3857;
+        }
+
+        .checkout-form label {
+            font-weight: 500;
+            font-size: 0.8rem;
+            display: block;
+            margin: 10px 0 4px;
+        }
+        .checkout-form input,
+        .checkout-form textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 1px solid #d1d9e6;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+        .checkout-form textarea {
+            min-height: 50px;
+            resize: vertical;
+        }
+
+        /* Confirmation */
+        .confirmation {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 16px;
+            padding: 24px;
+            margin: 16px 0;
+        }
+
+        /* Dashboard */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 28px;
+            padding: 40px 0;
+        }
+        .dashboard-sidebar {
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #eef2f6;
+        }
+        .dashboard-sidebar a {
+            display: block;
+            padding: 8px 12px;
+            border-radius: 8px;
+            color: #475569;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .dashboard-sidebar a:hover,
+        .dashboard-sidebar a.active {
+            background: #f1f5f9;
+            color: #0b1a2f;
+        }
+        .dashboard-content {
+            background: #fff;
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid #eef2f6;
+        }
+
+        .order-card {
+            border: 1px solid #eef2f6;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+        .order-card .order-header {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .order-card .order-status {
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        /* Admin */
+        .admin-layout {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 24px;
+            padding: 24px 0;
+        }
+        .admin-sidebar {
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #eef2f6;
+        }
+        .admin-sidebar a {
+            display: block;
+            padding: 8px 12px;
+            border-radius: 8px;
+            color: #475569;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .admin-sidebar a:hover,
+        .admin-sidebar a.active {
+            background: #f1f5f9;
+            color: #0b1a2f;
+        }
+        .admin-content {
+            background: #fff;
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid #eef2f6;
+            overflow-x: auto;
+        }
+
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+        .admin-stat {
+            background: #f8fafc;
+            padding: 14px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .admin-stat .num {
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+        .admin-stat .label {
+            font-size: 0.75rem;
+            color: #475569;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        table th,
+        table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #eef2f6;
+            text-align: left;
+        }
+        table th {
+            font-weight: 600;
+            background: #f8fafc;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: 600;
+        }
+        .status-pending {
+            background: #fef9c3;
+            color: #854d0e;
+        }
+        .status-confirmed {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        .status-processing {
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+        .status-ready {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .status-dispatched {
+            background: #ede9fe;
+            color: #5b21b6;
+        }
+        .status-out-for-delivery {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        .status-delivered {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .status-completed {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .status-cancelled {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* Footer */
+        footer {
+            background: #0b1a2f;
+            color: #cbd5e1;
+            padding: 40px 0 20px;
+            margin-top: 40px;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 28px;
+            margin-bottom: 28px;
+        }
+        .footer-grid h4 {
+            color: #fff;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+        .footer-grid a {
+            display: block;
+            margin: 4px 0;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        .footer-grid a:hover {
+            color: #fff;
+        }
+        .footer-grid .social-icons {
+            display: flex;
+            gap: 14px;
+            margin-top: 6px;
+        }
+        .footer-grid .social-icons a {
+            font-size: 1.3rem;
+            margin: 0;
+        }
+        .footer-bottom {
+            border-top: 1px solid #1e2d44;
+            padding-top: 16px;
+            font-size: 0.8rem;
+            text-align: center;
+            color: #94a3b8;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .hero p {
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .hero-btns {
+                justify-content: center;
+            }
+            .dual-cta-grid {
+                grid-template-columns: 1fr;
+            }
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            .admin-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                padding: 14px 0;
+                gap: 10px;
+                background: #fff;
+                border-top: 1px solid #eef2f6;
+            }
+            .nav-links.open {
+                display: flex;
+            }
+            .mobile-toggle {
+                display: block;
+            }
+            .header-inner {
+                flex-wrap: wrap;
+            }
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 14px;
+            }
+            .search-box input {
+                width: 120px;
+            }
+            .cart-sidebar {
+                width: 100vw;
+                max-width: 100vw;
+                border-radius: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 14px;
+            }
+            .benefits-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .dual-card {
+                padding: 20px 16px;
+            }
+            .hero h1 {
+                font-size: 1.6rem;
+            }
+            .admin-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .text-center {
+            text-align: center;
+        }
+        .mt-8 {
+            margin-top: 8px;
+        }
+        .mt-16 {
+            margin-top: 16px;
+        }
+        .mb-16 {
+            margin-bottom: 16px;
+        }
+        .flex {
+            display: flex;
+        }
+        .gap-8 {
+            gap: 8px;
+        }
+        .items-center {
+            align-items: center;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #0b1a2f;
+            color: #fff;
+            padding: 14px 24px;
+            border-radius: 12px;
+            z-index: 3000;
+            max-width: 380px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            display: none;
+            animation: slideUp 0.3s ease;
+        }
+        .toast.show {
+            display: block;
+        }
+        .toast.success {
+            background: #166534;
+        }
+        .toast.error {
+            background: #991b1b;
+        }
+        @keyframes slideUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
 <body>
-    <p>Redirecting to <a href="lorraineenterprise.html">Lorraine Enterprise</a>...</p>
+
+    <div class="toast" id="toast"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="container header-inner">
+            <div class="logo">
+                Lorraine<span>.</span>
+                <small>Electronics &amp; Enterprise</small>
+            </div>
+            <button class="mobile-toggle" id="mobileToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav class="nav-links" id="navLinks">
+                <a class="active" data-page="home">Home</a>
+                <a data-page="electronics">Lorraine Electronics</a>
+                <a data-page="enterprise">Lorraine Enterprise</a>
+                <a data-page="products">Products</a>
+                <a data-page="services">Services</a>
+                <a data-page="about">About</a>
+                <a data-page="contact">Contact</a>
+                <a data-page="track">Track Order</a>
+                <a class="nav-cta" id="orderNowNav"><i class="fas fa-shopping-bag"></i> Order Now</a>
+                <a id="authNavLink" data-page="login">Login</a>
+                <a id="adminNavLink" data-page="admin" class="hidden">Admin</a>
+                <a id="logoutNavLink" class="hidden" style="color:#dc2626;">Logout</a>
+            </nav>
+            <div class="nav-actions">
+                <a class="cart-icon" id="cartIcon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============================================================ -->
+    <!-- PAGE: HOME                                                    -->
+    <!-- ============================================================ -->
+    <div class="page active" id="page-home">
+        <section class="hero">
+            <div class="container hero-grid">
+                <div>
+                    <h1>Trusted for <span>Electronics</span> &amp; <span>Business Solutions</span></h1>
+                    <p>From premium laptops and repairs to branding, websites, and digital marketing — we've got you covered.</p>
+                    <div class="hero-btns">
+                        <button class="btn-primary" data-page="electronics"><i class="fas fa-laptop"></i> Shop Electronics</button>
+                        <button class="btn-secondary" data-page="enterprise"><i class="fas fa-rocket"></i> Explore Services</button>
+                    </div>
+                </div>
+                <div class="hero-image"></div>
+            </div>
+        </section>
+
+        <section class="dual-cta">
+            <div class="container dual-cta-grid">
+                <div class="dual-card electronics">
+                    <div class="badge-label">Lorraine Electronics</div>
+                    <div class="icon">💻</div>
+                    <h3>Shop Quality Electronics</h3>
+                    <p>New &amp; ex-UK/USA laptops, desktops, accessories, and expert repairs.</p>
+                    <button class="btn-primary" data-page="electronics"><i class="fas fa-shopping-bag"></i> Explore Lorraine Electronics</button>
+                </div>
+                <div class="dual-card enterprise">
+                    <div class="badge-label">Lorraine Enterprise</div>
+                    <div class="icon">🚀</div>
+                    <h3>Digital &amp; Business Solutions</h3>
+                    <p>Branding, marketing, content, design, and IT solutions for growth.</p>
+                    <button class="btn-primary" data-page="enterprise"><i class="fas fa-rocket"></i> Explore Lorraine Enterprise</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="benefits">
+            <div class="container">
+                <h2 class="section-title text-center">Why Choose Lorraine?</h2>
+                <p class="section-sub text-center" style="max-width:600px;margin:0 auto 28px;">Quality, reliability, and expertise across electronics and business solutions.</p>
+                <div class="benefits-grid">
+                    <div class="benefit-card"><i class="fas fa-check-circle"></i><h4>Quality Assured</h4><p>Premium products &amp; services</p></div>
+                    <div class="benefit-card"><i class="fas fa-tools"></i><h4>Expert Support</h4><p>Skilled team, fast response</p></div>
+                    <div class="benefit-card"><i class="fas fa-shield-alt"></i><h4>Secure &amp; Reliable</h4><p>Trusted by businesses &amp; individuals</p></div>
+                    <div class="benefit-card"><i class="fas fa-handshake"></i><h4>Customer First</h4><p>We're here to help you succeed</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="catalogue">
+            <div class="container">
+                <h2 class="section-title">Featured Products</h2>
+                <p class="section-sub">Popular electronics from Lorraine Electronics.</p>
+                <div class="product-grid" id="featuredGrid"></div>
+            </div>
+        </section>
+
+        <section class="quick-order">
+            <div class="container quick-order-inner">
+                <h2>Need Something Fast?</h2>
+                <p style="color:#475569;margin-bottom:14px;">Reach out on WhatsApp and we'll help you right away.</p>
+                <a href="https://wa.me/254794066681" target="_blank" class="btn-whatsapp"><i class="fab fa-whatsapp"></i> Order via WhatsApp</a>
+            </div>
+        </section>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- PAGE: LORRAINE ELECTRONICS                                    -->
+    <!-- ============================================================ -->
+    <div class="page" id="page-electronics">
+        <section class="hero" style="padding:30px 0 20px;">
+            <div class="container">
+                <h1 style="font-size:2rem;">Lorraine <span>Electronics</span></h1>
+                <p style="font-size:1rem;color:#475569;">Premium laptops, desktops, accessories, and repair services.</p>
+            </div>
+        </section>
+
+        <section class="catalogue">
+            <div class="container">
+                <div class="catalogue-controls">
+                    <div class="search-box">
+                        <input type="text" id="searchElectronics" placeholder="Search electronics..." />
+                        <button><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="filter-group">
+                        <select id="categoryElectronics">
+                            <option value="all">All Categories</option>
+                            <option value="laptops">Laptops</option>
+                            <option value="desktops">Desktops</option>
+                            <option value="accessories">Accessories</option>
+                            <option value="repairs">Repairs</option>
+                        </select>
+                        <select id="sortElectronics">
+                            <option value="default">Sort by</option>
+                            <option value="price-asc">Price: Low → High</option>
+                            <option value="price-desc">Price: High → Low</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="product-grid" id="productGridElectronics"></div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- PAGE: LORRAINE ENTERPRISE                                     -->
+    <!-- ============================================================ -->
+    <div class="page" id="page-enterprise">
+        <section class="hero" style="padding:30px 0 20px;background:linear-gradient(145deg,#f0f7ff 0%,#e8f0fe 100%);">
+            <div class="container">
+                <h1 style="font-size:2rem;">Lorraine <span>Enterprise</span></h1>
+                <p style="font-size:1rem;color:#475569;">Digital marketing, branding, content, design, and business solutions.</p>
+            </div>
+        </section>
+
+        <section class="catalogue">
+            <div class="container">
+                <div class="catalogue-controls">
+                    <div class="search-box">
+                        <input type="text" id="searchEnterprise" placeholder="Search services..." />
+                        <button><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="filter-group">
+                        <select id="categoryEnterprise">
+                            <option value="all">All Services</option>
+                            <option value="marketing">Marketing</option>
+                            <option value="branding">Branding</option>
+                            <option value="content">Content</option>
+                            <option value="design">Design</option>
+                            <option value="solutions">Solutions</option>
+                        </select>
+                        <select id="sortEnterprise">
+                            <option value="default">Sort by</option>
+                            <option value="price-asc">Price: Low → High</option>
+                            <option value="price-desc">Price: High → Low</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="product-grid" id="productGridEnterprise"></div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- PAGE: PRODUCTS                                                -->
+    <!-- ============================================================ -->
+    <div class="page" id="page-products">
+        <div class="container" style="padding:60px 0;text-align:center;">
+            <h2>Products</h2>
+            <p style="margin:12px 0 24px;color:#475569;">View our full electronics catalogue.</p>
+            <button class="btn-primary" data-page="electronics"><i class="fas fa-laptop"></i> Browse Electronics</button>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- PAGE: SERVICES                                                -->
+    <!-- ============================================================ -->
+    <div class="page" id="page-services">
+        <div class="container" style="padding:60px 0;text-align:center;">
+            <h2>Services</h2>
+            <p style="margin:12px 0 24px;color:#475569;">Explore our professional business solutions.</p>
+            <button class="btn-primary" data-page="enterprise"><i class="fas fa-rocket"></i> Explore Services</button>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- PAGE: ABOUT                                                   -->
+    <!-- ============================================================ -->
+    <div class="page" id="page-about">
+        <div class="container" style="padding:60px 0;max-width:720px;">
+            <h2>About Lorraine</h2>
+            <p style="margin-top:12px;">Lorraine is a trusted provider of premium electronics and professional business solutions. We serve individuals and businesses across Kenya with quality products, expert repairs, creative services, and IT support.</p>
+            <p style="margin-top:12px;">Our two divisions — <strong>Lorraine Electronics</strong> and <strong>Lorraine Enterprise</strong> — work together to deliver a complete experience for our customers.</p>
+            <div style="margin-top:24px;display:flex;gap:16px;flex-wrap:wrap;">
+                <button class="btn-primary" data-page="electronics"><i class="fas fa-laptop"></i> Lorraine Electronics</button>
+                <button class="btn-primary" data-page="enterprise"><i class="fas fa-rocket"></i> Lorraine Enterprise</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- PAGE: CONTACT                                                -->
+    <!-- ============================================================ -->
+    <div class="page" id="page-contact">
+        <section class="contact-page">
+            <div class="container">
+                <h2 class="section-title">Get in Touch</h2>
+                <p class="section-sub">We'd love to hear from you. Reach out via phone, WhatsApp, email, or social media.</p>
+                <div class="contact-grid">
+                    <div class="contact-info">
+                        <h3><i class="fas fa-phone"></i> Phone</h3>
+                        <a href="tel:+254794066681">+254 794 066 681</a>
+                        <h3><i class="fab fa-whatsapp"></i> WhatsApp</h3>
+                        <a href="https://wa.me/254794066681" target="_blank">+254 794 066 681</a>
+                        <h3><i class="fas fa-envelope"></i> Email</h3>
+                        <a href="mailto:lorraine1ventures@gmail.com">lorraine1ventures@gmail.com</a>
+                        <a href="mailto:lorraineenterprise1@gmail.com">lorraineenterprise1@gmail.com</a>
+                        <h3><i class="fas fa-share-alt"></i> Social Media</h3>
+                        <div class="social-links">
+                            <a href="https://web.facebook.com/Loreltronix" target="_blank"><i class="fab fa-facebook"></i></a>
+                            <a href="https://www.instagram.com/loreltronix_tech" target="_blank"><i class="fab fa-instagram"></i></a>
+                            <a href="https://wa.me/254794066681" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                        </div>
+                        <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap;">
+                            <a href="tel:+254794066681" class="btn-primary"><i class="fas fa-phone"></i> Call Us</a>
+                            <a href="https://wa.me/254794066681" target="_blank" class="btn-whatsapp"><i class="fab fa-whatsapp"></i> Chat on WhatsApp</a>
+                        </div>
+                    </div>
+                    <div>
+                        <form class="contact-form" id="contactForm">
+                            <input type="text" id="contactName" placeholder="Your Name" required />
+                            <input type="email" id="contactEmail" placeholder="Email Address" required />
+                            <input type="tel" id="contactPhone" placeholder="Phone Number" />
+                            <input type="text" id="contactSubject" placeholder="Subject" />
+                            <textarea id="contactMessage" placeholder="Your Message..." required></textarea>
+                            <button type="submit" class="btn-primary"><i class="fas fa-paper-plane"></i> Send Enquiry</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- PAGE: TRACK ORDER                                            -->
+    <!-- ============================================================ -->
+    <div class="page" id="page-track">
+        <div class="container" style="padding:60px 0;max-width:640px;">
+            <h2>Track Your Order</h2>
+            <p style="color:#475569;margin-bottom:20px;">Enter your order number to track its status.</p>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;">
+                <input type="text" id="trackOrderInput" placeholder="e.g. ORD-12345678-XXXX" style="flex:1;padding:12px 16px;border-radius:10px;border:1px solid #d1d9e6;font-size:1rem;min-width:200px;" />
+                <button class="btn-primary" id="trackOrderBtn"><i class="fas fa-search"></i> Track</button>
+            </div>
+            <div id="trackResult" style="margin-top:24px;"></div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- PAGE: LOGIN / REGISTER                                       -->
+    <!-- ============================================================ -->
+    <div class="page" id="page-login">
+        <div class="auth-form" id="loginForm">
+            <h2>Welcome Back</h2>
+            <input type="email" id="loginEmail" placeholder="Email Address" required />
+            <input type="password" id="loginPassword" placeholder="Password" required />
+            <button class="btn-primary" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Login</button>
+            <p class="auth-link">Don't have an account? <a id="showRegister">Create Account</a></p>
+        </div>
+        <div class="auth-form hidden" id="registerForm">
+            <h2>Create Account</h2>
+            <input type="text" id="regFullName" placeholder="Full Name" required />
+            <input type="email" id="regEmail" placeholder="Email Address" required />
+            <input type="tel" id="regPhone" placeholder="Phone Number" />
+            <input type="password" id="regPassword" placeholder="Password (min 6 characters)" required />
+            <input type="text" id="regAddress" placeholder="Address" />
+            <input type="text" id="regCity" placeholder="City" />
+            <button class="btn-primary" id="registerBtn"><i class="fas fa-user-plus"></i> Register</button>
+            <p class="auth-link">Already have an account? <a id="showLogin">Login</a></p>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- PAGE: DASHBOARD                                              -->
+    <!-- ============================================================ -->
+    <div class="page" id="page-dashboard">
+        <div class="container dashboard-grid">
+            <div class="dashboard-sidebar">
+                <h4 style="margin-bottom:12px;">My Account</h4>
+                <a class="active" data-dash="overview">Overview</a>
+                <a data-dash="orders">My Orders</a>
+                <a data-dash="profile">Profile</a>
+                <a data-dash="track">Track Order</a>
+                <a id="dashLogout" style="color:#dc2626;">Logout</a>
+            </div>
+            <div class="dashboard-content" id="dashContent">
+                <div id="dashOverview">
+                    <h3>Welcome back, <span id="dashUserName">Customer</span>!</h3>
+                    <p style="color:#475569;">Here's an overview of your account activity.</p>
+                    <div id="dashOrdersOverview"></div>
+                </div>
+                <div id="dashOrders" class="hidden">
+                    <h3>My Orders</h3>
+                    <div id="dashOrdersList"></div>
+                </div>
+                <div id="dashProfile" class="hidden">
+                    <h3>Profile Settings</h3>
+                    <form id="profileForm">
+                        <input type="text" id="profFullName" placeholder="Full Name" required />
+                        <input type="email" id="profEmail" placeholder="Email" required disabled />
+                        <input type="tel" id="profPhone" placeholder="Phone" />
+                        <input type="text" id="profAddress" placeholder="Address" />
+                        <input type="text" id="profCity" placeholder="City" />
+                        <button type="submit" class="btn-primary">Update Profile</button>
+                    </form>
+                    <hr style="margin:20px 0;" />
+                    <h4>Change Password</h4>
+                    <form id="passwordForm">
+                        <input type="password" id="currentPassword" placeholder="Current Password" required />
+                        <input type="password" id="newPassword" placeholder="New Password" required />
+                        <button type="submit" class="btn-primary">Change Password</button>
+                    </form>
+                </div>
+                <div id="dashTrack" class="hidden">
+                    <h3>Track Order</h3>
+                    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+                        <input type="text" id="dashTrackInput" placeholder="Order Number" style="flex:1;padding:10px 14px;border-radius:10px;border:1px solid #d1d9e6;" />
+                        <button class="btn-primary" id="dashTrackBtn">Track</button>
+                    </div>
+                    <div id="dashTrackResult" style="margin-top:16px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- PAGE: ADMIN                                                  -->
+    <!-- ============================================================ -->
+    <div class="page" id="page-admin">
+        <div class="container">
+            <div class="admin-layout">
+                <div class="admin-sidebar">
+                    <h4 style="margin-bottom:12px;">Admin Panel</h4>
+                    <a class="active" data-admin="dashboard">Dashboard</a>
+                    <a data-admin="orders">Orders</a>
+                    <a data-admin="products">Products</a>
+                    <a data-admin="customers">Customers</a>
+                    <a data-admin="enquiries">Enquiries</a>
+                    <a data-admin="settings">Settings</a>
+                    <a id="adminLogout" style="color:#dc2626;">Logout</a>
+                </div>
+                <div class="admin-content" id="adminContent">
+                    <!-- Dashboard -->
+                    <div id="adminDashboard">
+                        <h3>Dashboard</h3>
+                        <div class="admin-stats" id="adminStats"></div>
+                        <h4 style="margin-top:20px;">Recent Orders</h4>
+                        <div id="adminRecentOrders"></div>
+                    </div>
+                    <!-- Orders -->
+                    <div id="adminOrders" class="hidden">
+                        <h3>Orders</h3>
+                        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
+                            <select id="adminOrderFilter" style="padding:8px 12px;border-radius:8px;border:1px solid #d1d9e6;">
+                                <option value="all">All Orders</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Confirmed">Confirmed</option>
+                                <option value="Processing">Processing</option>
+                                <option value="Ready">Ready</option>
+                                <option value="Dispatched">Dispatched</option>
+                                <option value="Out for Delivery">Out for Delivery</option>
+                                <option value="Delivered">Delivered</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
+                            <input type="text" id="adminOrderSearch" placeholder="Search orders..." style="padding:8px 12px;border-radius:8px;border:1px solid #d1d9e6;flex:1;min-width:150px;" />
+                        </div>
+                        <div id="adminOrdersList"></div>
+                    </div>
+                    <!-- Products -->
+                    <div id="adminProducts" class="hidden">
+                        <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
+                            <h3>Products</h3>
+                            <button class="btn-primary btn-sm" id="addProductBtn"><i class="fas fa-plus"></i> Add Product</button>
+                        </div>
+                        <div id="adminProductsList"></div>
+                    </div>
+                    <!-- Customers -->
+                    <div id="adminCustomers" class="hidden">
+                        <h3>Customers</h3>
+                        <div id="adminCustomersList"></div>
+                    </div>
+                    <!-- Enquiries -->
+                    <div id="adminEnquiries" class="hidden">
+                        <h3>Service Enquiries</h3>
+                        <div id="adminEnquiriesList"></div>
+                    </div>
+                    <!-- Settings -->
+                    <div id="adminSettings" class="hidden">
+                        <h3>Settings</h3>
+                        <form id="settingsForm">
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                                <div><label style="font-weight:600;font-size:0.85rem;">Business Name</label><input type="text" id="setBusinessName" style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid #d1d9e6;" /></div>
+                                <div><label style="font-weight:600;font-size:0.85rem;">Phone</label><input type="text" id="setPhone" style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid #d1d9e6;" /></div>
+                                <div><label style="font-weight:600;font-size:0.85rem;">WhatsApp</label><input type="text" id="setWhatsapp" style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid #d1d9e6;" /></div>
+                                <div><label style="font-weight:600;font-size:0.85rem;">Email</label><input type="email" id="setEmail" style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid #d1d9e6;" /></div>
+                                <div><label style="font-weight:600;font-size:0.85rem;">Currency</label><input type="text" id="setCurrency" style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid #d1d9e6;" /></div>
+                                <div><label style="font-weight:600;font-size:0.85rem;">Delivery Fee</label><input type="number" id="setDeliveryFee" style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid #d1d9e6;" /></div>
+                            </div>
+                            <button type="submit" class="btn-primary" style="margin-top:16px;">Save Settings</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- CART SIDEBAR                                                 -->
+    <!-- ============================================================ -->
+    <div class="cart-overlay" id="cartOverlay">
+        <div class="cart-sidebar">
+            <h2>Your Cart <button class="close-cart" id="closeCart"><i class="fas fa-times"></i></button></h2>
+            <div id="cartItems"></div>
+            <div class="cart-total" id="cartTotal">KSh 0.00</div>
+            <div class="checkout-form">
+                <h4>Checkout</h4>
+                <label>Full Name</label><input type="text" id="checkoutName" placeholder="John Doe" />
+                <label>Phone</label><input type="tel" id="checkoutPhone" placeholder="+254 794 066 681" />
+                <label>Email</label><input type="email" id="checkoutEmail" placeholder="john@example.com" />
+                <label>Delivery Location</label><input type="text" id="checkoutLocation" placeholder="Nairobi, Kenya" />
+                <label>Delivery City</label><input type="text" id="checkoutCity" placeholder="Nairobi" />
+                <label>Order Notes</label><textarea id="checkoutNotes" placeholder="Special instructions..."></textarea>
+                <button class="checkout-btn" id="placeOrderBtn"><i class="fas fa-check"></i> Place Order</button>
+                <a href="https://wa.me/254794066681" target="_blank" class="btn-whatsapp" style="display:block;text-align:center;margin-top:10px;width:100%;"><i class="fab fa-whatsapp"></i> Order via WhatsApp</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- CONFIRMATION OVERLAY                                          -->
+    <!-- ============================================================ -->
+    <div class="cart-overlay" id="confirmOverlay">
+        <div class="cart-sidebar" style="max-width:500px;">
+            <h2>✅ Order Confirmed!</h2>
+            <div id="confirmationContent" class="confirmation"></div>
+            <button class="btn-primary" id="closeConfirm" style="width:100%;text-align:center;">Continue Shopping</button>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- FOOTER                                                       -->
+    <!-- ============================================================ -->
+    <footer>
+        <div class="container footer-grid">
+            <div>
+                <h4>Lorraine</h4>
+                <p style="font-size:0.85rem;max-width:200px;">Electronics &amp; enterprise solutions for modern businesses and individuals.</p>
+                <div class="social-icons">
+                    <a href="https://web.facebook.com/Loreltronix" target="_blank"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/loreltronix_tech" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://wa.me/254794066681" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            <div>
+                <h4>Quick Links</h4>
+                <a data-page="home">Home</a>
+                <a data-page="electronics">Lorraine Electronics</a>
+                <a data-page="enterprise">Lorraine Enterprise</a>
+                <a data-page="products">Products</a>
+                <a data-page="services">Services</a>
+                <a data-page="about">About</a>
+                <a data-page="contact">Contact</a>
+                <a data-page="track">Track Order</a>
+            </div>
+            <div>
+                <h4>Customer</h4>
+                <a data-page="login">My Account</a>
+                <a data-page="dashboard">My Orders</a>
+                <a data-page="track">Track Order</a>
+                <a id="footerCart">Cart</a>
+            </div>
+            <div>
+                <h4>Contact</h4>
+                <a href="tel:+254794066681"><i class="fas fa-phone"></i> +254 794 066 681</a>
+                <a href="mailto:lorraine1ventures@gmail.com"><i class="fas fa-envelope"></i> lorraine1ventures@gmail.com</a>
+                <a href="mailto:lorraineenterprise1@gmail.com"><i class="fas fa-envelope"></i> lorraineenterprise1@gmail.com</a>
+                <a href="https://wa.me/254794066681" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+            </div>
+        </div>
+        <div class="container footer-bottom">
+            &copy; 2026 Lorraine. All rights reserved. | Created by Lorraine Enterprise
+        </div>
+    </footer>
+
+    <!-- ============================================================ -->
+    <!-- JAVASCRIPT - FULL APPLICATION                                -->
+    <!-- ============================================================ -->
+    <script>
+        // ============================================================
+        // CONFIGURATION
+        // ============================================================
+        const API_URL = 'http://localhost:5000/api';
+        let authToken = localStorage.getItem('lorraine_token');
+        let currentUser = null;
+
+        // ============================================================
+        // TOAST
+        // ============================================================
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast show ' + type;
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
+        }
+
+        // ============================================================
+        // API HELPER
+        // ============================================================
+        async function apiRequest(endpoint, options = {}) {
+            const headers = {
+                'Content-Type': 'application/json',
+                ...options.headers
+            };
+            if (authToken) {
+                headers['Authorization'] = `Bearer ${authToken}`;
+            }
+
+            const response = await fetch(`${API_URL}${endpoint}`, {
+                ...options,
+                headers
+            });
+
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.error || 'Request failed');
+            }
+            return data;
+        }
+
+        // ============================================================
+        // AUTH
+        // ============================================================
+        function setAuth(token, user) {
+            authToken = token;
+            currentUser = user;
+            if (token) {
+                localStorage.setItem('lorraine_token', token);
+                localStorage.setItem('lorraine_user', JSON.stringify(user));
+            } else {
+                localStorage.removeItem('lorraine_token');
+                localStorage.removeItem('lorraine_user');
+            }
+            updateAuthUI();
+        }
+
+        function loadAuth() {
+            const token = localStorage.getItem('lorraine_token');
+            const user = localStorage.getItem('lorraine_user');
+            if (token && user) {
+                authToken = token;
+                currentUser = JSON.parse(user);
+            }
+            updateAuthUI();
+        }
+
+        function updateAuthUI() {
+            const authLink = document.getElementById('authNavLink');
+            const logoutLink = document.getElementById('logoutNavLink');
+            const adminLink = document.getElementById('adminNavLink');
+
+            if (currentUser) {
+                authLink.textContent = currentUser.full_name || 'Account';
+                authLink.setAttribute('data-page', 'dashboard');
+                authLink.classList.remove('hidden');
+                logoutLink.classList.remove('hidden');
+                if (adminLink) {
+                    adminLink.classList.toggle('hidden', currentUser.role !== 'admin');
+                }
+            } else {
+                authLink.textContent = 'Login';
+                authLink.setAttribute('data-page', 'login');
+                authLink.classList.remove('hidden');
+                logoutLink.classList.add('hidden');
+                if (adminLink) adminLink.classList.add('hidden');
+            }
+        }
+
+        async function logout() {
+            setAuth(null, null);
+            showToast('Logged out successfully.');
+            switchPage('home');
+        }
+
+        // ============================================================
+        // PAGE NAVIGATION
+        // ============================================================
+        function switchPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById(`page-${pageId}`);
+            if (target) target.classList.add('active');
+
+            document.querySelectorAll('.nav-links a[data-page]').forEach(a => {
+                a.classList.toggle('active', a.getAttribute('data-page') === pageId);
+            });
+
+            document.getElementById('navLinks').classList.remove('open');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (pageId === 'dashboard') loadDashboard();
+            if (pageId === 'admin') loadAdminDashboard();
+        }
+
+        // ============================================================
+        // DASHBOARD
+        // ============================================================
+        async function loadDashboard() {
+            if (!currentUser) {
+                switchPage('login');
+                return;
+            }
+
+            document.getElementById('dashUserName').textContent = currentUser.full_name;
+
+            try {
+                const orders = await apiRequest('/orders');
+                const container = document.getElementById('dashOrdersOverview');
+                const listContainer = document.getElementById('dashOrdersList');
+
+                if (!orders || orders.length === 0) {
+                    container.innerHTML = '<p style="color:#64748b;">You haven\'t placed any orders yet.</p>';
+                    listContainer.innerHTML = '<p style="color:#64748b;">No orders to display.</p>';
+                    return;
+                }
+
+                const recent = orders.slice(0, 3);
+                container.innerHTML = recent.map(o => `
+                    <div class="order-card">
+                        <div class="order-header">
+                            <strong>Order #${o.order_number}</strong>
+                            <span class="order-status status-badge status-${o.status.toLowerCase()}">${o.status}</span>
+                        </div>
+                        <p style="font-size:0.85rem;color:#475569;">${new Date(o.created_at).toLocaleDateString()} — KSh ${o.total.toLocaleString()}</p>
+                    </div>
+                `).join('');
+
+                listContainer.innerHTML = orders.map(o => `
+                    <div class="order-card">
+                        <div class="order-header">
+                            <strong>Order #${o.order_number}</strong>
+                            <span class="order-status status-badge status-${o.status.toLowerCase()}">${o.status}</span>
+                        </div>
+                        <p style="font-size:0.85rem;color:#475569;">${new Date(o.created_at).toLocaleString()} — KSh ${o.total.toLocaleString()}</p>
+                    </div>
+                `).join('');
+
+            } catch (error) {
+                document.getElementById('dashOrdersOverview').innerHTML =
+                    `<p style="color:#dc2626;">Failed to load orders.</p>`;
+            }
+
+            // Profile
+            try {
+                const userData = await apiRequest('/auth/me');
+                document.getElementById('profFullName').value = userData.full_name || '';
+                document.getElementById('profEmail').value = userData.email || '';
+                document.getElementById('profPhone').value = userData.phone || '';
+                document.getElementById('profAddress').value = userData.address || '';
+                document.getElementById('profCity').value = userData.city || '';
+            } catch (error) {}
+        }
+
+        // ============================================================
+        // ADMIN - DASHBOARD
+        // ============================================================
+        async function loadAdminDashboard() {
+            try {
+                const stats = await apiRequest('/admin/dashboard');
+                const statsContainer = document.getElementById('adminStats');
+
+                statsContainer.innerHTML = `
+                    <div class="admin-stat"><div class="num">${stats.total_products || 0}</div><div class="label">Products</div></div>
+                    <div class="admin-stat"><div class="num">${stats.products_in_stock || 0}</div><div class="label">In Stock</div></div>
+                    <div class="admin-stat"><div class="num">${stats.low_stock_products || 0}</div><div class="label">Low Stock</div></div>
+                    <div class="admin-stat"><div class="num">${stats.total_orders || 0}</div><div class="label">Total Orders</div></div>
+                    <div class="admin-stat"><div class="num">${stats.visitors_today || 0}</div><div class="label">Visitors Today</div></div>
+                    <div class="admin-stat"><div class="num">KSh ${(stats.total_revenue || 0).toLocaleString()}</div><div class="label">Revenue</div></div>
+                `;
+
+                // Recent orders
+                const recentOrders = stats.recent_orders || [];
+                const ordersContainer = document.getElementById('adminRecentOrders');
+                if (recentOrders.length === 0) {
+                    ordersContainer.innerHTML = '<p style="color:#64748b;">No recent orders.</p>';
+                } else {
+                    ordersContainer.innerHTML = `
+                        <table>
+                            <thead><tr><th>Order #</th><th>Customer</th><th>Total</th><th>Status</th></tr></thead>
+                            <tbody>
+                                ${recentOrders.map(o => `
+                                    <tr>
+                                        <td><strong>#${o.order_number}</strong></td>
+                                        <td>${o.customer_name}</td>
+                                        <td>KSh ${o.total.toLocaleString()}</td>
+                                        <td><span class="status-badge status-${o.status.toLowerCase()}">${o.status}</span></td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                }
+
+                // Also load orders list
+                loadAdminOrders();
+
+            } catch (error) {
+                document.getElementById('adminStats').innerHTML =
+                    `<p style="color:#dc2626;">Failed to load dashboard: ${error.message}</p>`;
+            }
+        }
+
+        // ============================================================
+        // ADMIN - ORDERS
+        // ============================================================
+        async function loadAdminOrders() {
+            const filter = document.getElementById('adminOrderFilter')?.value || 'all';
+            const search = document.getElementById('adminOrderSearch')?.value || '';
+
+            try {
+                const params = new URLSearchParams();
+                if (filter !== 'all') params.append('status', filter);
+                if (search) params.append('search', search);
+
+                const orders = await apiRequest(`/admin/orders?${params.toString()}`);
+                const container = document.getElementById('adminOrdersList');
+
+                if (!orders || orders.length === 0) {
+                    container.innerHTML = '<p style="color:#64748b;">No orders found.</p>';
+                    return;
+                }
+
+                container.innerHTML = `
+                    <table>
+                        <thead><tr><th>Order #</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Action</th></tr></thead>
+                        <tbody>
+                            ${orders.map(o => `
+                                <tr>
+                                    <td><strong>#${o.order_number}</strong></td>
+                                    <td>${o.customer_name}</td>
+                                    <td>${o.item_count || 0} items</td>
+                                    <td>KSh ${o.total.toLocaleString()}</td>
+                                    <td><span class="status-badge status-${o.status.toLowerCase()}">${o.status}</span></td>
+                                    <td>
+                                        <select onchange="updateOrderStatus(${o.id}, this.value)" style="padding:4px 8px;border-radius:6px;border:1px solid #d1d9e6;font-size:0.8rem;">
+                                            <option value="Pending" ${o.status==='Pending'?'selected':''}>Pending</option>
+                                            <option value="Confirmed" ${o.status==='Confirmed'?'selected':''}>Confirmed</option>
+                                            <option value="Processing" ${o.status==='Processing'?'selected':''}>Processing</option>
+                                            <option value="Ready" ${o.status==='Ready'?'selected':''}>Ready</option>
+                                            <option value="Dispatched" ${o.status==='Dispatched'?'selected':''}>Dispatched</option>
+                                            <option value="Out for Delivery" ${o.status==='Out for Delivery'?'selected':''}>Out for Delivery</option>
+                                            <option value="Delivered" ${o.status==='Delivered'?'selected':''}>Delivered</option>
+                                            <option value="Cancelled" ${o.status==='Cancelled'?'selected':''}>Cancelled</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            } catch (error) {
+                container.innerHTML = `<p style="color:#dc2626;">Failed to load orders: ${error.message}</p>`;
+            }
+        }
+
+        async function updateOrderStatus(orderId, newStatus) {
+            try {
+                await apiRequest(`/admin/orders/${orderId}/status`, {
+                    method: 'PATCH',
+                    body: JSON.stringify({ status: newStatus, note: `Status updated to ${newStatus}` })
+                });
+                showToast(`Order status updated to ${newStatus}`, 'success');
+                loadAdminOrders();
+                loadAdminDashboard();
+            } catch (error) {
+                showToast(`Update failed: ${error.message}`, 'error');
+            }
+        }
+
+        // ============================================================
+        // ADMIN - PRODUCTS
+        // ============================================================
+        async function loadAdminProducts() {
+            try {
+                const products = await apiRequest('/products');
+                const container = document.getElementById('adminProductsList');
+
+                if (!products || products.length === 0) {
+                    container.innerHTML = '<p style="color:#64748b;">No products found.</p>';
+                    return;
+                }
+
+                container.innerHTML = `
+                    <table>
+                        <thead><tr><th>Image</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th><th>Actions</th></tr></thead>
+                        <tbody>
+                            ${products.map(p => `
+                                <tr>
+                                    <td>${p.image_url || '📦'}</td>
+                                    <td>${p.name}</td>
+                                    <td>${p.category}</td>
+                                    <td>KSh ${p.price.toLocaleString()}</td>
+                                    <td>${p.stock_quantity || 0}</td>
+                                    <td>${p.available ? '✅ Available' : '❌ Unavailable'}</td>
+                                    <td>
+                                        <button class="btn-secondary btn-sm" onclick="editProduct(${p.id})">Edit</button>
+                                        <button class="btn-danger btn-sm" onclick="deleteProduct(${p.id})">Delete</button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            } catch (error) {
+                document.getElementById('adminProductsList').innerHTML =
+                    `<p style="color:#dc2626;">Failed to load products: ${error.message}</p>`;
+            }
+        }
+
+        function editProduct(id) {
+            const name = prompt('Enter new product name:');
+            if (name) {
+                const price = prompt('Enter new price:');
+                if (price) {
+                    const stock = prompt('Enter stock quantity:');
+                    apiRequest(`/admin/products/${id}`, {
+                        method: 'PUT',
+                        body: JSON.stringify({
+                            name,
+                            price: parseFloat(price),
+                            stock_quantity: parseInt(stock) || 0,
+                            slug: name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+                            category: 'laptops',
+                            available: true,
+                            short_description: 'Updated product'
+                        })
+                    }).then(() => {
+                        showToast('Product updated successfully!', 'success');
+                        loadAdminProducts();
+                    }).catch(err => showToast(`Update failed: ${err.message}`, 'error'));
+                }
+            }
+        }
+
+        async function deleteProduct(id) {
+            if (!confirm('Are you sure you want to delete this product?')) return;
+            try {
+                await apiRequest(`/admin/products/${id}`, { method: 'DELETE' });
+                showToast('Product deleted successfully!', 'success');
+                loadAdminProducts();
+            } catch (error) {
+                showToast(`Delete failed: ${error.message}`, 'error');
+            }
+        }
+
+        document.getElementById('addProductBtn')?.addEventListener('click', () => {
+            const name = prompt('Enter product name:');
+            if (name) {
+                const price = prompt('Enter price:');
+                if (price) {
+                    const category = prompt('Enter category (laptops/desktops/accessories/repairs):');
+                    if (category) {
+                        apiRequest('/admin/products', {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                name,
+                                slug: name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+                                category: category.toLowerCase(),
+                                short_description: 'New product',
+                                long_description: 'Description coming soon.',
+                                price: parseFloat(price),
+                                stock_quantity: 10,
+                                available: true
+                            })
+                        }).then(() => {
+                            showToast('Product created successfully!', 'success');
+                            loadAdminProducts();
+                        }).catch(err => showToast(`Create failed: ${err.message}`, 'error'));
+                    }
+                }
+            }
+        });
+
+        // ============================================================
+        // ADMIN - CUSTOMERS
+        // ============================================================
+        async function loadAdminCustomers() {
+            try {
+                const customers = await apiRequest('/admin/users');
+                const container = document.getElementById('adminCustomersList');
+
+                if (!customers || customers.length === 0) {
+                    container.innerHTML = '<p style="color:#64748b;">No customers found.</p>';
+                    return;
+                }
+
+                container.innerHTML = `
+                    <table>
+                        <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Orders</th><th>Joined</th></tr></thead>
+                        <tbody>
+                            ${customers.map(c => `
+                                <tr>
+                                    <td><strong>${c.full_name}</strong></td>
+                                    <td>${c.email}</td>
+                                    <td>${c.phone || '-'}</td>
+                                    <td>${c.order_count || 0}</td>
+                                    <td>${new Date(c.created_at).toLocaleDateString()}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            } catch (error) {
+                container.innerHTML = `<p style="color:#dc2626;">Failed to load customers: ${error.message}</p>`;
+            }
+        }
+
+        // ============================================================
+        // ADMIN - ENQUIRIES
+        // ============================================================
+        async function loadAdminEnquiries() {
+            try {
+                const enquiries = await apiRequest('/admin/enquiries');
+                const container = document.getElementById('adminEnquiriesList');
+
+                if (!enquiries || enquiries.length === 0) {
+                    container.innerHTML = '<p style="color:#64748b;">No enquiries yet.</p>';
+                    return;
+                }
+
+                container.innerHTML = `
+                    <table>
+                        <thead><tr><th>Customer</th><th>Service</th><th>Status</th><th>Date</th><th>Action</th></tr></thead>
+                        <tbody>
+                            ${enquiries.map(e => `
+                                <tr>
+                                    <td><strong>${e.customer_name}</strong><br><small style="color:#64748b;">${e.customer_email}</small></td>
+                                    <td>${e.service_name || 'General'}</td>
+                                    <td><span class="status-badge" style="background:#dbeafe;color:#1e40af;">${e.status}</span></td>
+                                    <td>${new Date(e.created_at).toLocaleDateString()}</td>
+                                    <td>
+                                        <select onchange="updateEnquiryStatus(${e.id}, this.value)" style="padding:4px 8px;border-radius:6px;border:1px solid #d1d9e6;font-size:0.8rem;">
+                                            <option value="New" ${e.status==='New'?'selected':''}>New</option>
+                                            <option value="Contacted" ${e.status==='Contacted'?'selected':''}>Contacted</option>
+                                            <option value="In Discussion" ${e.status==='In Discussion'?'selected':''}>In Discussion</option>
+                                            <option value="Quoted" ${e.status==='Quoted'?'selected':''}>Quoted</option>
+                                            <option value="Approved" ${e.status==='Approved'?'selected':''}>Approved</option>
+                                            <option value="Completed" ${e.status==='Completed'?'selected':''}>Completed</option>
+                                            <option value="Cancelled" ${e.status==='Cancelled'?'selected':''}>Cancelled</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            } catch (error) {
+                container.innerHTML = `<p style="color:#dc2626;">Failed to load enquiries: ${error.message}</p>`;
+            }
+        }
+
+        async function updateEnquiryStatus(enquiryId, newStatus) {
+            try {
+                await apiRequest(`/admin/enquiries/${enquiryId}`, {
+                    method: 'PATCH',
+                    body: JSON.stringify({ status: newStatus, notes: `Status updated to ${newStatus}` })
+                });
+                showToast(`Enquiry status updated to ${newStatus}`, 'success');
+                loadAdminEnquiries();
+            } catch (error) {
+                showToast(`Update failed: ${error.message}`, 'error');
+            }
+        }
+
+        // ============================================================
+        // NAVIGATION EVENTS
+        // ============================================================
+        document.querySelectorAll('[data-page]').forEach(el => {
+            el.addEventListener('click', function(e) {
+                const page = this.getAttribute('data-page');
+                if (page === 'dashboard' || page === 'admin') {
+                    if (!currentUser) {
+                        showToast('Please login first.', 'error');
+                        switchPage('login');
+                        return;
+                    }
+                    if (page === 'admin' && currentUser.role !== 'admin') {
+                        showToast('Admin access required.', 'error');
+                        return;
+                    }
+                }
+                switchPage(page);
+            });
+        });
+
+        // Admin navigation
+        document.querySelectorAll('[data-admin]').forEach(el => {
+            el.addEventListener('click', function() {
+                document.querySelectorAll('[data-admin]').forEach(a => a.classList.remove('active'));
+                this.classList.add('active');
+
+                const section = this.getAttribute('data-admin');
+                document.querySelectorAll('#adminContent > div').forEach(d => d.classList.add('hidden'));
+
+                const targetMap = {
+                    'dashboard': 'adminDashboard',
+                    'orders': 'adminOrders',
+                    'products': 'adminProducts',
+                    'customers': 'adminCustomers',
+                    'enquiries': 'adminEnquiries',
+                    'settings': 'adminSettings'
+                };
+                const target = document.getElementById(targetMap[section]);
+                if (target) target.classList.remove('hidden');
+
+                if (section === 'dashboard') loadAdminDashboard();
+                if (section === 'orders') loadAdminOrders();
+                if (section === 'products') loadAdminProducts();
+                if (section === 'customers') loadAdminCustomers();
+                if (section === 'enquiries') loadAdminEnquiries();
+            });
+        });
+
+        // Dashboard navigation
+        document.querySelectorAll('[data-dash]').forEach(el => {
+            el.addEventListener('click', function() {
+                document.querySelectorAll('[data-dash]').forEach(a => a.classList.remove('active'));
+                this.classList.add('active');
+
+                const section = this.getAttribute('data-dash');
+                document.querySelectorAll('#dashContent > div').forEach(d => d.classList.add('hidden'));
+                const targetMap = {
+                    'overview': 'dashOverview',
+                    'orders': 'dashOrders',
+                    'profile': 'dashProfile',
+                    'track': 'dashTrack'
+                };
+                const target = document.getElementById(targetMap[section]);
+                if (target) target.classList.remove('hidden');
+
+                if (section === 'orders') loadDashboard();
+            });
+        });
+
+        // ============================================================
+        // AUTH EVENTS
+        // ============================================================
+        document.getElementById('loginBtn')?.addEventListener('click', async () => {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+
+            if (!email || !password) {
+                showToast('Please enter email and password.', 'error');
+                return;
+            }
+
+            try {
+                const data = await apiRequest('/auth/login', {
+                    method: 'POST',
+                    body: JSON.stringify({ email, password })
+                });
+                setAuth(data.token, data.user);
+                showToast(`Welcome back, ${data.user.full_name}!`, 'success');
+
+                if (data.user.role === 'admin') {
+                    switchPage('admin');
+                } else {
+                    switchPage('dashboard');
+                }
+            } catch (error) {
+                showToast(`Login failed: ${error.message}`, 'error');
+            }
+        });
+
+        document.getElementById('registerBtn')?.addEventListener('click', async () => {
+            const full_name = document.getElementById('regFullName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+            const password = document.getElementById('regPassword').value.trim();
+            const address = document.getElementById('regAddress').value.trim();
+            const city = document.getElementById('regCity').value.trim();
+
+            if (!full_name || !email || !password || password.length < 6) {
+                showToast('Please fill in all required fields. Password must be at least 6 characters.', 'error');
+                return;
+            }
+
+            try {
+                const data = await apiRequest('/auth/register', {
+                    method: 'POST',
+                    body: JSON.stringify({ email, password, full_name, phone, address, city })
+                });
+                setAuth(data.token, data.user);
+                showToast(`Welcome, ${data.user.full_name}!`, 'success');
+                switchPage('dashboard');
+            } catch (error) {
+                showToast(`Registration failed: ${error.message}`, 'error');
+            }
+        });
+
+        document.getElementById('showRegister')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('registerForm').classList.remove('hidden');
+        });
+        document.getElementById('showLogin')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('registerForm').classList.add('hidden');
+            document.getElementById('loginForm').classList.remove('hidden');
+        });
+
+        document.getElementById('logoutNavLink')?.addEventListener('click', logout);
+        document.getElementById('dashLogout')?.addEventListener('click', logout);
+        document.getElementById('adminLogout')?.addEventListener('click', logout);
+
+        // ============================================================
+        // CART
+        // ============================================================
+        let cart = JSON.parse(localStorage.getItem('lorraine_cart')) || [];
+
+        function saveCart() {
+            localStorage.setItem('lorraine_cart', JSON.stringify(cart));
+            updateCartUI();
+        }
+
+        function addToCart(id, name, price, image = '📦') {
+            const existing = cart.find(item => item.id === id);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({ id, name, price, image, qty: 1 });
+            }
+            saveCart();
+            showToast(`${name} added to cart!`, 'success');
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            saveCart();
+        }
+
+        function updateQty(id, newQty) {
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                const qty = parseInt(newQty);
+                if (qty < 1) { removeFromCart(id); return; }
+                item.qty = qty;
+                saveCart();
+            }
+        }
+
+        function getCartTotal() {
+            return cart.reduce((sum, i) => sum + i.price * i.qty, 0);
+        }
+
+        function updateCartUI() {
+            const count = cart.reduce((s, i) => s + i.qty, 0);
+            document.getElementById('cartCount').textContent = count;
+
+            const container = document.getElementById('cartItems');
+            if (cart.length === 0) {
+                container.innerHTML = '<p style="color:#64748b;">Your cart is empty.</p>';
+            } else {
+                container.innerHTML = cart.map(item => `
+                    <div class="cart-item">
+                        <div style="font-size:1.8rem;">${item.image}</div>
+                        <div class="cart-item-info">
+                            <h4>${item.name}</h4>
+                            <div class="price">KSh ${item.price.toLocaleString()}</div>
+                            <input type="number" value="${item.qty}" min="1" onchange="updateQty(${item.id}, this.value)" />
+                        </div>
+                        <button class="remove-item" onclick="removeFromCart(${item.id})"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                `).join('');
+            }
+            document.getElementById('cartTotal').textContent = `KSh ${getCartTotal().toLocaleString()}`;
+        }
+
+        // ============================================================
+        // PLACE ORDER
+        // ============================================================
+        document.getElementById('placeOrderBtn')?.addEventListener('click', async () => {
+            if (cart.length === 0) {
+                showToast('Your cart is empty.', 'error');
+                return;
+            }
+
+            const name = document.getElementById('checkoutName').value.trim();
+            const phone = document.getElementById('checkoutPhone').value.trim();
+            const email = document.getElementById('checkoutEmail').value.trim();
+            const location = document.getElementById('checkoutLocation').value.trim();
+            const city = document.getElementById('checkoutCity').value.trim();
+            const notes = document.getElementById('checkoutNotes').value.trim();
+
+            if (!name || !phone || !email || !location) {
+                showToast('Please fill in all required fields (Name, Phone, Email, Location).', 'error');
+                return;
+            }
+
+            const items = cart.map(i => ({
+                product_id: i.id,
+                product_name: i.name,
+                quantity: i.qty,
+                price: i.price,
+                total: i.price * i.qty
+            }));
+
+            const subtotal = getCartTotal();
+            const deliveryFee = 0;
+            const total = subtotal + deliveryFee;
+
+            try {
+                const result = await apiRequest('/orders', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        customer_name: name,
+                        customer_email: email,
+                        customer_phone: phone,
+                        delivery_address: location,
+                        delivery_city: city,
+                        delivery_notes: notes,
+                        items,
+                        subtotal,
+                        delivery_fee: deliveryFee,
+                        total,
+                        notes: `Order placed via website.`
+                    })
+                });
+
+                cart = [];
+                saveCart();
+                updateCartUI();
+                document.getElementById('cartOverlay').classList.remove('open');
+
+                const confirmContent = document.getElementById('confirmationContent');
+                confirmContent.innerHTML = `
+                    <p><strong>Order #${result.order_number}</strong></p>
+                    <p><strong>Customer:</strong> ${name} (${phone})</p>
+                    <p><strong>Delivery:</strong> ${location}</p>
+                    <p><strong>Items:</strong> ${items.map(i => `${i.product_name} (x${i.quantity})`).join(', ')}</p>
+                    <p><strong>Total:</strong> KSh ${total.toLocaleString()}</p>
+                    <p><strong>Status:</strong> <span class="badge">Pending</span></p>
+                    <p style="margin-top:8px;">📧 We'll contact you shortly to confirm your order.</p>
+                    <a href="https://wa.me/254794066681" target="_blank" class="btn-whatsapp" style="margin-top:10px;display:inline-block;"><i class="fab fa-whatsapp"></i> Chat on WhatsApp</a>
+                `;
+                document.getElementById('confirmOverlay').classList.add('open');
+                showToast('Order placed successfully!', 'success');
+
+                document.getElementById('checkoutName').value = '';
+                document.getElementById('checkoutPhone').value = '';
+                document.getElementById('checkoutEmail').value = '';
+                document.getElementById('checkoutLocation').value = '';
+                document.getElementById('checkoutCity').value = '';
+                document.getElementById('checkoutNotes').value = '';
+
+            } catch (error) {
+                showToast(`Order failed: ${error.message}`, 'error');
+            }
+        });
+
+        document.getElementById('closeConfirm')?.addEventListener('click', () => {
+            document.getElementById('confirmOverlay').classList.remove('open');
+        });
+
+        // ============================================================
+        // TRACK ORDER
+        // ============================================================
+        document.getElementById('trackOrderBtn')?.addEventListener('click', async () => {
+            const orderNumber = document.getElementById('trackOrderInput').value.trim();
+            if (!orderNumber) {
+                showToast('Please enter an order number.', 'error');
+                return;
+            }
+
+            try {
+                const data = await apiRequest(`/orders/track/${encodeURIComponent(orderNumber)}`);
+                const resultDiv = document.getElementById('trackResult');
+
+                resultDiv.innerHTML = `
+                    <div class="order-card">
+                        <div class="order-header">
+                            <strong>Order #${data.order_number}</strong>
+                            <span class="order-status status-badge status-${data.status.toLowerCase()}">${data.status}</span>
+                        </div>
+                        <p><strong>Date:</strong> ${new Date(data.created_at).toLocaleString()}</p>
+                        <p><strong>Customer:</strong> ${data.customer_name} (${data.customer_phone})</p>
+                        <p><strong>Delivery:</strong> ${data.delivery_address}</p>
+                        <p><strong>Items:</strong> ${(data.items || []).map(i => `${i.product_name} (x${i.quantity})`).join(', ')}</p>
+                        <p><strong>Total:</strong> KSh ${data.total.toLocaleString()}</p>
+                    </div>
+                `;
+            } catch (error) {
+                document.getElementById('trackResult').innerHTML =
+                    `<p style="color:#dc2626;">Order not found. Please check the order number.</p>`;
+            }
+        });
+
+        // ============================================================
+        // CONTACT FORM
+        // ============================================================
+        document.getElementById('contactForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('contactName').value.trim();
+            const email = document.getElementById('contactEmail').value.trim();
+            const phone = document.getElementById('contactPhone').value.trim();
+            const subject = document.getElementById('contactSubject').value.trim();
+            const message = document.getElementById('contactMessage').value.trim();
+
+            if (!name || !email || !message) {
+                showToast('Please fill in name, email, and message.', 'error');
+                return;
+            }
+
+            try {
+                await apiRequest('/service-enquiries', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        customer_name: name,
+                        customer_email: email,
+                        customer_phone: phone || '',
+                        message: `${subject ? 'Subject: ' + subject + '\n\n' : ''}${message}`
+                    })
+                });
+                showToast('✅ Your enquiry has been sent!', 'success');
+                document.getElementById('contactForm').reset();
+            } catch (error) {
+                showToast(`Failed to send enquiry: ${error.message}`, 'error');
+            }
+        });
+
+        // ============================================================
+        // LOAD PRODUCTS
+        // ============================================================
+        async function loadProducts(gridId, searchId, categoryId, sortId, isService = false) {
+            const grid = document.getElementById(gridId);
+            const search = document.getElementById(searchId)?.value?.toLowerCase() || '';
+            const category = document.getElementById(categoryId)?.value || 'all';
+            const sort = document.getElementById(sortId)?.value || 'default';
+
+            try {
+                const endpoint = isService ? '/services' : '/products';
+                const params = new URLSearchParams();
+                if (category !== 'all') params.append('category', category);
+                if (search) params.append('search', search);
+                if (sort !== 'default') params.append('sort', sort);
+
+                const data = await apiRequest(`${endpoint}?${params.toString()}`);
+
+                if (!data || data.length === 0) {
+                    grid.innerHTML =
+                        `<p style="grid-column:1/-1;text-align:center;padding:30px;color:#64748b;">No items found.</p>`;
+                    return;
+                }
+
+                grid.innerHTML = data.map(item => {
+                    const priceDisplay = typeof item.price === 'number' ?
+                        `KSh ${item.price.toLocaleString()}` :
+                        item.price || 'Request Quote';
+
+                    const isAvailable = item.available !== false && (item.stock_quantity === undefined || item
+                        .stock_quantity > 0);
+
+                    const addButton = (typeof item.price === 'number' && isAvailable) ?
+                        `<button class="btn-accent" onclick="addToCart(${item.id}, '${item.name}', ${item.price}, '${item.image_url || '📦'}')"><i class="fas fa-cart-plus"></i> Add</button>` :
+                        '';
+
+                    const whatsappMsg = `Hi Lorraine, I'm interested in "${item.name}".`;
+
+                    return `
+                        <div class="product-card">
+                            <div class="product-image">${item.image_url || (isService ? '📋' : '💻')}</div>
+                            <h3>${item.name}</h3>
+                            <div class="category-tag">${item.category}</div>
+                            <div class="price">${priceDisplay}</div>
+                            <div class="short-desc">${item.short_description || ''}</div>
+                            <div style="margin:4px 0 6px;">
+                                ${isAvailable ? '<span class="badge">Available</span>' : '<span class="badge out">Unavailable</span>'}
+                                ${isService ? '<span class="badge service">Service</span>' : ''}
+                            </div>
+                            <div class="card-actions">
+                                ${addButton}
+                                <a href="https://wa.me/254794066681?text=${encodeURIComponent(whatsappMsg)}" target="_blank" class="btn-whatsapp" style="padding:5px 12px;font-size:0.75rem;"><i class="fab fa-whatsapp"></i></a>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (error) {
+                grid.innerHTML =
+                    `<p style="grid-column:1/-1;text-align:center;padding:30px;color:#dc2626;">Failed to load items.</p>`;
+            }
+        }
+
+        // ============================================================
+        // INIT
+        // ============================================================
+        loadAuth();
+
+        // Load products
+        loadProducts('productGridElectronics', 'searchElectronics', 'categoryElectronics', 'sortElectronics');
+        loadProducts('productGridEnterprise', 'searchEnterprise', 'categoryEnterprise', 'sortEnterprise', true);
+
+        // Search/filter events
+        document.getElementById('searchElectronics')?.addEventListener('input', () => {
+            loadProducts('productGridElectronics', 'searchElectronics', 'categoryElectronics', 'sortElectronics');
+        });
+        document.getElementById('categoryElectronics')?.addEventListener('change', () => {
+            loadProducts('productGridElectronics', 'searchElectronics', 'categoryElectronics', 'sortElectronics');
+        });
+        document.getElementById('sortElectronics')?.addEventListener('change', () => {
+            loadProducts('productGridElectronics', 'searchElectronics', 'categoryElectronics', 'sortElectronics');
+        });
+
+        document.getElementById('searchEnterprise')?.addEventListener('input', () => {
+            loadProducts('productGridEnterprise', 'searchEnterprise', 'categoryEnterprise', 'sortEnterprise', true);
+        });
+        document.getElementById('categoryEnterprise')?.addEventListener('change', () => {
+            loadProducts('productGridEnterprise', 'searchEnterprise', 'categoryEnterprise', 'sortEnterprise', true);
+        });
+        document.getElementById('sortEnterprise')?.addEventListener('change', () => {
+            loadProducts('productGridEnterprise', 'searchEnterprise', 'categoryEnterprise', 'sortEnterprise', true);
+        });
+
+        // Cart events
+        document.getElementById('cartIcon')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('cartOverlay').classList.add('open');
+        });
+        document.getElementById('closeCart')?.addEventListener('click', () => {
+            document.getElementById('cartOverlay').classList.remove('open');
+        });
+        document.getElementById('cartOverlay')?.addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) document.getElementById('cartOverlay').classList.remove('open');
+        });
+        document.getElementById('footerCart')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('cartOverlay').classList.add('open');
+        });
+        document.getElementById('orderNowNav')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('cartIcon').click();
+        });
+
+        // Mobile toggle
+        document.getElementById('mobileToggle')?.addEventListener('click', () => {
+            document.getElementById('navLinks').classList.toggle('open');
+        });
+
+        // Admin filter events
+        document.getElementById('adminOrderFilter')?.addEventListener('change', loadAdminOrders);
+        document.getElementById('adminOrderSearch')?.addEventListener('input', loadAdminOrders);
+
+        // Admin settings form
+        document.getElementById('settingsForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                await apiRequest('/admin/settings', {
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        business_name: document.getElementById('setBusinessName').value,
+                        business_phone: document.getElementById('setPhone').value,
+                        business_whatsapp: document.getElementById('setWhatsapp').value,
+                        business_email: document.getElementById('setEmail').value,
+                        currency: document.getElementById('setCurrency').value,
+                        delivery_fee: document.getElementById('setDeliveryFee').value
+                    })
+                });
+                showToast('Settings saved successfully!', 'success');
+            } catch (error) {
+                showToast(`Save failed: ${error.message}`, 'error');
+            }
+        });
+
+        // Profile form
+        document.getElementById('profileForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                await apiRequest('/auth/me', {
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        full_name: document.getElementById('profFullName').value.trim(),
+                        phone: document.getElementById('profPhone').value.trim(),
+                        address: document.getElementById('profAddress').value.trim(),
+                        city: document.getElementById('profCity').value.trim()
+                    })
+                });
+                currentUser.full_name = document.getElementById('profFullName').value.trim();
+                localStorage.setItem('lorraine_user', JSON.stringify(currentUser));
+                updateAuthUI();
+                showToast('Profile updated successfully!', 'success');
+            } catch (error) {
+                showToast(`Update failed: ${error.message}`, 'error');
+            }
+        });
+
+        // Password form
+        document.getElementById('passwordForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const current = document.getElementById('currentPassword').value.trim();
+            const newPass = document.getElementById('newPassword').value.trim();
+
+            if (!current || !newPass || newPass.length < 6) {
+                showToast('Current password and new password (min 6 chars) are required.', 'error');
+                return;
+            }
+
+            try {
+                await apiRequest('/auth/password', {
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        current_password: current,
+                        new_password: newPass
+                    })
+                });
+                showToast('Password changed successfully!', 'success');
+                document.getElementById('passwordForm').reset();
+            } catch (error) {
+                showToast(`Password change failed: ${error.message}`, 'error');
+            }
+        });
+
+        updateCartUI();
+
+        console.log('🚀 Lorraine Business Platform loaded!');
+        console.log('📧 Admin: admin@lorraine.com');
+        console.log('🔑 Password: Admin@2026');
+    </script>
 </body>
 </html>
