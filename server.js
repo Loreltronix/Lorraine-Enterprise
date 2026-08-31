@@ -445,3 +445,4 @@ app.get('/api/test', (req, res) => {
         env: process.env.NODE_ENV || 'development'
     });
 });
+// Trigger new deployment - Mon Aug 31 22:28:04 EAT 2026
