@@ -1136,10 +1136,10 @@
                 <a class="active" data-page="home">Home</a>
                 <a data-page="electronics">Lorraine Electronics</a>
                 <a data-page="enterprise">Lorraine Enterprise</a>
-                <a href="#" data-page="products">Products</a>
-                <a href="#" data-page="services">Services</a>
-                <a href="#" data-page="about">About</a>
-                <a href="#" data-page="contact">Contact</a>
+                <a data-page="products">Products</a>
+                <a data-page="services">Services</a>
+                <a data-page="about">About</a>
+                <a data-page="contact">Contact</a>
                 <a data-page="track">Track Order</a>
                 <a class="nav-cta" id="orderNowNav"><i class="fas fa-shopping-bag"></i> Order Now</a>
                 <a id="authNavLink" data-page="login">Login</a>
@@ -1601,13 +1601,13 @@
             </div>
             <div>
                 <h4>Quick Links</h4>
-                <a href="#" data-page="home">Home</a>
+                <a data-page="home">Home</a>
                 <a data-page="electronics">Lorraine Electronics</a>
                 <a data-page="enterprise">Lorraine Enterprise</a>
-                <a href="#" data-page="products">Products</a>
-                <a href="#" data-page="services">Services</a>
-                <a href="#" data-page="about">About</a>
-                <a href="#" data-page="contact">Contact</a>
+                <a data-page="products">Products</a>
+                <a data-page="services">Services</a>
+                <a data-page="about">About</a>
+                <a data-page="contact">Contact</a>
                 <a data-page="track">Track Order</a>
             </div>
             <div>
@@ -1637,9 +1637,7 @@
         // ============================================================
         // CONFIGURATION
         // ============================================================
-        const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-        ? 'http://localhost:5000' 
-        : '';
+        const API_URL = 'http://localhost:5000/api';
         let authToken = localStorage.getItem('lorraine_token');
         let currentUser = null;
 
@@ -2199,29 +2197,17 @@
         document.getElementById('loginBtn')?.addEventListener('click', async () => {
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value.trim();
-            
+
             if (!email || !password) {
                 showToast('Please enter email and password.', 'error');
                 return;
             }
-            
+
             try {
-                const response = await fetch('/api/login', {
+                const data = await apiRequest('/auth/login', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
                 });
-                const data = await response.json();
-                if (data.success) {
-                    showToast('Login successful! Welcome ' + data.user.name, 'success');
-                    // You can add redirect here
-                } else {
-                    showToast(data.message || 'Login failed', 'error');
-                }
-            } catch (error) {
-                showToast('Login error: ' + error.message, 'error');
-            }
-        });;
                 setAuth(data.token, data.user);
                 showToast(`Welcome back, ${data.user.full_name}!`, 'success');
 
@@ -2689,148 +2675,4 @@
         console.log('🔑 Password: Admin@2026');
     </script>
 </body>
-</html><script>
-// Navigation handler
-document.addEventListener('DOMContentLoaded', function() {
-    // Get all navigation links
-    const navLinks = document.querySelectorAll('a[data-page]');
-    
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const page = this.getAttribute('data-page');
-            if (page) {
-                switchPage(page);
-            }
-        });
-    });
-    
-    // Also handle regular links
-    const regularLinks = document.querySelectorAll('nav a:not([data-page])');
-    regularLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const text = this.textContent.trim();
-            const pageMap = {
-                'Home': 'home',
-                'Lorraine Electronics': 'electronics',
-                'Lorraine Enterprise': 'enterprise',
-                'Products': 'products',
-                'Services': 'services',
-                'About': 'about',
-                'Contact': 'contact',
-                'Track Order': 'track-order'
-            };
-            const page = pageMap[text];
-            if (page) {
-                switchPage(page);
-            }
-        });
-    });
-});
-</script>
-<script>
-// Navigation click handler
-document.addEventListener('DOMContentLoaded', function() {
-    // Handle all navigation links with data-page
-    document.querySelectorAll('.nav-links a[data-page]').forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const page = this.getAttribute('data-page');
-            if (page) {
-                switchPage(page);
-            }
-        });
-    });
-    
-    // Also handle links in the footer or elsewhere
-    document.querySelectorAll('a[data-page]').forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const page = this.getAttribute('data-page');
-            if (page) {
-                switchPage(page);
-            }
-        });
-    });
-});
-</script>
-<script>
-// Force all navigation links to work
-document.addEventListener('DOMContentLoaded', function() {
-    // Get all links in the navigation
-    const navLinks = document.querySelectorAll('.nav-links a, nav a, .nav a, header a');
-    
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            // Check if it has data-page
-            const page = this.getAttribute('data-page');
-            if (page) {
-                e.preventDefault();
-                switchPage(page);
-                return;
-            }
-            
-            // Check if it has href with #
-            const href = this.getAttribute('href');
-            if (href && href.startsWith('#')) {
-                e.preventDefault();
-                const pageId = href.replace('#', '');
-                // Check if this page exists
-                if (document.getElementById('page-' + pageId)) {
-                    switchPage(pageId);
-                }
-            }
-        });
-    });
-});
-
-// Also handle clicks on ANY link with data-page
-document.addEventListener('click', function(e) {
-    const link = e.target.closest('a[data-page]');
-    if (link) {
-        e.preventDefault();
-        const page = link.getAttribute('data-page');
-        if (page) {
-            switchPage(page);
-        }
-    }
-});
-</script>
-<script>
-// Navigation click handler - runs when page loads
-document.addEventListener('DOMContentLoaded', function() {
-    // Get ALL links in the navigation area
-    const navLinks = document.querySelectorAll('.nav-links a, nav a, header a, .nav a');
-    
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            const page = this.getAttribute('data-page');
-            if (page) {
-                e.preventDefault();
-                switchPage(page);
-            }
-        });
-    });
-    
-    // Also handle links in the footer
-    document.querySelectorAll('footer a[data-page]').forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            switchPage(this.getAttribute('data-page'));
-        });
-    });
-});
-
-// Also catch clicks on any a[data-page] anywhere
-document.addEventListener('click', function(e) {
-    const link = e.target.closest('a[data-page]');
-    if (link) {
-        e.preventDefault();
-        const page = link.getAttribute('data-page');
-        if (page) {
-            switchPage(page);
-        }
-    }
-});
-</script>
+</html>
