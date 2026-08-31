@@ -2729,3 +2729,29 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+<script>
+// Navigation click handler
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle all navigation links with data-page
+    document.querySelectorAll('.nav-links a[data-page]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const page = this.getAttribute('data-page');
+            if (page) {
+                switchPage(page);
+            }
+        });
+    });
+    
+    // Also handle links in the footer or elsewhere
+    document.querySelectorAll('a[data-page]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const page = this.getAttribute('data-page');
+            if (page) {
+                switchPage(page);
+            }
+        });
+    });
+});
+</script>
