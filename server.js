@@ -181,3 +181,86 @@ app.get('*', (req, res) => {
 });
 
 module.exports = app;
+
+// ============================================================
+// PRODUCTS / ITEMS ENDPOINTS
+// ============================================================
+
+// Get all items
+app.get('/api/items', async (req, res) => {
+    try {
+        // For testing - return sample products
+        const items = [
+            { id: 1, name: 'Premium Laptop', price: 45000, category: 'Laptops', image: '/images/laptop.jpg' },
+            { id: 2, name: 'Gaming Desktop', price: 85000, category: 'Desktops', image: '/images/desktop.jpg' },
+            { id: 3, name: 'Wireless Headset', price: 3500, category: 'Accessories', image: '/images/headset.jpg' },
+            { id: 4, name: '4K Monitor', price: 28000, category: 'Monitors', image: '/images/monitor.jpg' },
+            { id: 5, name: 'Mechanical Keyboard', price: 4500, category: 'Accessories', image: '/images/keyboard.jpg' },
+            { id: 6, name: 'Gaming Mouse', price: 2500, category: 'Accessories', image: '/images/mouse.jpg' }
+        ];
+        
+        res.json(items);
+    } catch (error) {
+        console.error('Items error:', error);
+        res.status(500).json({ error: 'Failed to load items' });
+    }
+});
+
+// Get single item by ID
+app.get('/api/items/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        // Sample items
+        const items = [
+            { id: 1, name: 'Premium Laptop', price: 45000, category: 'Laptops', image: '/images/laptop.jpg', description: 'High-performance laptop for business and gaming' },
+            { id: 2, name: 'Gaming Desktop', price: 85000, category: 'Desktops', image: '/images/desktop.jpg', description: 'Powerful desktop for gaming and content creation' }
+        ];
+        
+        const item = items.find(i => i.id === parseInt(id));
+        if (item) {
+            res.json(item);
+        } else {
+            res.status(404).json({ error: 'Item not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to load item' });
+    }
+});
+
+// Cart endpoints
+app.post('/api/cart', async (req, res) => {
+    try {
+        const { itemId, quantity } = req.body;
+        // For testing - just return success
+        res.json({ 
+            success: true, 
+            message: 'Item added to cart!',
+            cart: [{ id: itemId, quantity: quantity }]
+        });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to add to cart' });
+    }
+});
+
+app.get('/api/cart', async (req, res) => {
+    try {
+        // For testing - return empty cart
+        res.json({ items: [], total: 0 });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to load cart' });
+    }
+});
+
+// Orders endpoint
+app.post('/api/orders', async (req, res) => {
+    try {
+        const { items, total, shippingInfo } = req.body;
+        res.json({
+            success: true,
+            message: 'Order placed successfully!',
+            orderId: 'ORD-' + Date.now()
+        });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to place order' });
+    }
+});
