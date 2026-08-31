@@ -15,8 +15,12 @@ app.get('/', (req, res) => {
 });
 
 // ============================================================
-// API ROUTES
+// API ROUTES - MUST COME BEFORE THE CATCH-ALL
 // ============================================================
+
+app.get('/api/test', (req, res) => {
+    res.json({ message: 'API is working!', timestamp: new Date().toISOString() });
+});
 
 app.get('/api/products', (req, res) => {
     res.json([
@@ -39,9 +43,11 @@ app.get('/api/services', (req, res) => {
 
 app.post('/api/auth/login', (req, res) => {
     const { email, password } = req.body;
+    console.log('🔐 Login attempt:', email);
+    
     if (email === 'admin@lorraine.com' && password === 'Admin@2026') {
         res.json({
-            token: 'fake-token',
+            token: 'fake-jwt-token-' + Date.now(),
             user: { id: 1, email, full_name: 'Admin', role: 'admin' }
         });
     } else {
@@ -49,8 +55,24 @@ app.post('/api/auth/login', (req, res) => {
     }
 });
 
+app.post('/api/auth/register', (req, res) => {
+    const { email, password, full_name } = req.body;
+    res.json({
+        token: 'fake-jwt-token-' + Date.now(),
+        user: { id: 2, email, full_name: full_name || 'Customer', role: 'customer' }
+    });
+});
+
 app.get('/api/auth/me', (req, res) => {
     res.json({ id: 1, email: 'admin@lorraine.com', full_name: 'Admin', role: 'admin' });
+});
+
+app.put('/api/auth/me', (req, res) => {
+    res.json({ success: true, message: 'Profile updated' });
+});
+
+app.put('/api/auth/password', (req, res) => {
+    res.json({ success: true, message: 'Password changed' });
 });
 
 app.get('/api/orders', (req, res) => {
@@ -93,21 +115,26 @@ app.post('/api/service-enquiries', (req, res) => {
     res.json({ success: true, message: 'Enquiry sent' });
 });
 
-app.get('/api/test', (req, res) => {
-    res.json({ message: 'API is working!' });
-});
-
-// Catch all - serve HTML
+// ============================================================
+// CATCH-ALL - Serve HTML for any non-API routes
+// ============================================================
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'lorraineenterprise.html'));
 });
 
+// ============================================================
+// EXPORT FOR VERCEL
+// ============================================================
 module.exports = app;
 
-// Local server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
-    console.log('📧 Email: admin@lorraine.com');
-    console.log('🔑 Password: Admin@2026');
-});
+// ============================================================
+// LOCAL SERVER (only runs when not on Vercel)
+// ============================================================
+if (process.env.NODE_ENV !== 'production') {
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => {
+        console.log(`🚀 Server running on http://localhost:${PORT}`);
+        console.log('📧 Email: admin@lorraine.com');
+        console.log('🔑 Password: Admin@2026');
+    });
+}
