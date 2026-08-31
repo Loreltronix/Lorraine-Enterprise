@@ -2487,7 +2487,7 @@
             const sort = document.getElementById(sortId)?.value || 'default';
 
             try {
-                const endpoint = isService ? '/services' : '/products';
+                const endpoint = isService ? '/api/services' : '/api/products';
                 const params = new URLSearchParams();
                 if (category !== 'all') params.append('category', category);
                 if (search) params.append('search', search);
