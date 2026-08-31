@@ -264,3 +264,184 @@ app.post('/api/orders', async (req, res) => {
         res.status(500).json({ error: 'Failed to place order' });
     }
 });
+
+// ============================================================
+// PRODUCTS / ITEMS ENDPOINTS
+// ============================================================
+
+// Get all products
+app.get('/api/items', async (req, res) => {
+    console.log('📦 Fetching items...');
+    
+    try {
+        // Sample products - you can replace these with database products
+        const items = [
+            {
+                id: 1,
+                name: "Premium Laptop",
+                price: 45000,
+                category: "Laptops",
+                image: "https://placehold.co/300x200/1a237e/white?text=Laptop",
+                description: "High-performance laptop for business and gaming"
+            },
+            {
+                id: 2,
+                name: "Gaming Desktop",
+                price: 85000,
+                category: "Desktops",
+                image: "https://placehold.co/300x200/1a237e/white?text=Desktop",
+                description: "Powerful desktop for gaming and content creation"
+            },
+            {
+                id: 3,
+                name: "Wireless Headset",
+                price: 3500,
+                category: "Accessories",
+                image: "https://placehold.co/300x200/1a237e/white?text=Headset",
+                description: "Premium wireless headset with noise cancellation"
+            },
+            {
+                id: 4,
+                name: "4K Monitor",
+                price: 28000,
+                category: "Monitors",
+                image: "https://placehold.co/300x200/1a237e/white?text=Monitor",
+                description: "Ultra HD 4K monitor for professional work"
+            },
+            {
+                id: 5,
+                name: "Mechanical Keyboard",
+                price: 4500,
+                category: "Accessories",
+                image: "https://placehold.co/300x200/1a237e/white?text=Keyboard",
+                description: "RGB mechanical keyboard with blue switches"
+            },
+            {
+                id: 6,
+                name: "Gaming Mouse",
+                price: 2500,
+                category: "Accessories",
+                image: "https://placehold.co/300x200/1a237e/white?text=Mouse",
+                description: "High-precision gaming mouse with RGB lighting"
+            }
+        ];
+        
+        console.log(`✅ Returning ${items.length} items`);
+        res.json(items);
+    } catch (error) {
+        console.error('❌ Items error:', error);
+        res.status(500).json({ error: 'Failed to load items' });
+    }
+});
+
+// Get single item by ID
+app.get('/api/items/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const items = [
+            { id: 1, name: 'Premium Laptop', price: 45000, category: 'Laptops', image: 'https://placehold.co/300x200/1a237e/white?text=Laptop' },
+            { id: 2, name: 'Gaming Desktop', price: 85000, category: 'Desktops', image: 'https://placehold.co/300x200/1a237e/white?text=Desktop' },
+            { id: 3, name: 'Wireless Headset', price: 3500, category: 'Accessories', image: 'https://placehold.co/300x200/1a237e/white?text=Headset' }
+        ];
+        
+        const item = items.find(i => i.id === parseInt(id));
+        if (item) {
+            res.json(item);
+        } else {
+            res.status(404).json({ error: 'Item not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to load item' });
+    }
+});
+
+// ============================================================
+// CART ENDPOINTS
+// ============================================================
+
+// Add to cart
+app.post('/api/cart', async (req, res) => {
+    try {
+        const { itemId, quantity } = req.body;
+        console.log('🛒 Adding to cart:', itemId, quantity);
+        
+        res.json({ 
+            success: true, 
+            message: 'Item added to cart!',
+            item: { id: itemId, quantity: quantity }
+        });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to add to cart' });
+    }
+});
+
+// Get cart
+app.get('/api/cart', async (req, res) => {
+    try {
+        res.json({ items: [], total: 0 });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to load cart' });
+    }
+});
+
+// ============================================================
+// ORDERS ENDPOINTS
+// ============================================================
+
+// Place order
+app.post('/api/orders', async (req, res) => {
+    try {
+        const { items, total, shippingInfo } = req.body;
+        console.log('📦 New order:', { items, total });
+        
+        res.json({
+            success: true,
+            message: 'Order placed successfully!',
+            orderId: 'ORD-' + Date.now(),
+            total: total
+        });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to place order' });
+    }
+});
+
+// Get orders
+app.get('/api/orders', async (req, res) => {
+    try {
+        res.json({ orders: [] });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to load orders' });
+    }
+});
+
+// ============================================================
+// CONTACT ENDPOINTS
+// ============================================================
+
+app.post('/api/contact', async (req, res) => {
+    try {
+        const { name, email, message } = req.body;
+        console.log('📧 Contact form:', { name, email, message });
+        
+        res.json({
+            success: true,
+            message: 'Message sent successfully!'
+        });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to send message' });
+    }
+});
+
+console.log('✅ All API endpoints registered');
+
+// ============================================================
+// TEST ENDPOINT
+// ============================================================
+
+app.get('/api/test', (req, res) => {
+    res.json({ 
+        message: '✅ API is working!', 
+        timestamp: new Date().toISOString(),
+        env: process.env.NODE_ENV || 'development'
+    });
+});
