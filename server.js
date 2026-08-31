@@ -5,7 +5,7 @@ const app = express();
 app.use(express.json());
 
 // Initialize database connection
-const sql = neon(process.env.DATABASE_URL);
+const sql = neon(process.env.POSTGRES_URL || process.env.DATABASE_URL);
 
 // Health check endpoint with database connection test
 app.get('/', async (req, res) => {
@@ -14,6 +14,7 @@ app.get('/', async (req, res) => {
         res.json({ 
             message: result[0].message,
             status: '✅ Database connected!',
+            database: 'lorraine-db',
             timestamp: new Date().toISOString()
         });
     } catch (error) {
@@ -59,7 +60,7 @@ app.get('/setup', async (req, res) => {
                 created_at TIMESTAMP DEFAULT NOW()
             );
         `;
-        res.json({ message: '✅ Comments table created successfully!' });
+        res.json({ message: '✅ Comments table created successfully in lorraine-db!' });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
