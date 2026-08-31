@@ -6,7 +6,13 @@ let dbStatus = 'Not initialized';
 
 try {
     const { neon } = require('@neondatabase/serverless');
-    const connectionString = process.env.DATABASE__UNPOOLED;
+    
+    // Try multiple possible environment variable names
+    const connectionString = process.env.DATABASE__UNPOOLED || 
+                            process.env.DATABASE_URL || 
+                            process.env.POSTGRES_URL;
+    
+    console.log('🔑 Connection string:', connectionString ? '✅ Found' : '❌ Not found');
     
     if (connectionString) {
         sql = neon(connectionString);
@@ -15,6 +21,7 @@ try {
     } else {
         dbStatus = '⚠️ DATABASE__UNPOOLED not set';
         console.log('⚠️ No connection string found');
+        console.log('Available env vars:', Object.keys(process.env).filter(k => k.includes('DATABASE') || k.includes('POSTGRES')));
     }
 } catch (error) {
     dbStatus = '❌ Database error: ' + error.message;
@@ -23,7 +30,6 @@ try {
 
 app.get('/', async (req, res) => {
     try {
-        // If database is not available, return a friendly message
         if (!sql) {
             return res.json({
                 message: '✅ Lorraine Enterprise is alive!',
@@ -33,7 +39,6 @@ app.get('/', async (req, res) => {
             });
         }
         
-        // Test the database connection
         const result = await sql`SELECT 'Connected to Neon!' as message;`;
         res.json({ 
             message: '✅ Lorraine Enterprise is live!',
@@ -42,6 +47,7 @@ app.get('/', async (req, res) => {
             timestamp: new Date().toISOString()
         });
     } catch (error) {
+        console.error('Query error:', error);
         res.json({
             message: '✅ Server is running',
             database: '❌ Query failed',
@@ -50,5 +56,7 @@ app.get('/', async (req, res) => {
         });
     }
 });
+
+app.get('/favicon.ico', (req, res) => res.status(204).end());
 
 module.exports = app;
