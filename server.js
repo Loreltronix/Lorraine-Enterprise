@@ -1,58 +1,74 @@
 const express = require('express');
-const { neon } = require('@neondatabase/serverless');
-
 const app = express();
-app.use(express.json());
 
-// Initialize database connection
-const sql = neon(process.env.POSTGRES_URL || process.env.DATABASE_URL);
+// Try loading the database driver
+let sql = null;
+let initError = null;
 
-// Health check endpoint with database connection test
+try {
+    console.log('🔄 Loading Neon driver...');
+    const { neon } = require('@neondatabase/serverless');
+    
+    // Try different environment variable names
+    const connectionString = process.env.DATABASE_URL || 
+                            process.env.POSTGRES_URL || 
+                            process.env.DATABASE__UNPOOLED;
+    
+    console.log('🔑 Connection string found:', connectionString ? '✅ Yes' : '❌ No');
+    
+    if (!connectionString) {
+        initError = new Error('No DATABASE_URL found in environment variables');
+    } else {
+        sql = neon(connectionString);
+        console.log('✅ Database driver initialized');
+    }
+} catch (error) {
+    initError = error;
+    console.error('❌ Driver error:', error.message);
+}
+
 app.get('/', async (req, res) => {
     try {
-        const result = await sql`SELECT 'Lorraine Enterprise is live with Neon!' as message;`;
-        res.json({ 
-            message: result[0].message,
-            status: '✅ Database connected!',
-            database: 'lorraine-db',
+        // Check for initialization errors
+        if (initError) {
+            return res.status(500).json({
+                error: 'Database initialization failed',
+                details: initError.message,
+                hint: 'Make sure DATABASE_URL is set in Vercel environment variables'
+            });
+        }
+        
+        if (!sql) {
+            return res.status(500).json({
+                error: 'Database not initialized',
+                details: 'SQL client is null'
+            });
+        }
+        
+        // Test the connection
+        const result = await sql`SELECT 'Connected to Neon!' as message;`;
+        res.json({
+            message: '✅ Lorraine Enterprise is live!',
+            database: result[0].message,
             timestamp: new Date().toISOString()
         });
     } catch (error) {
-        console.error('Database error:', error);
-        res.status(500).json({ 
-            error: 'Database connection failed',
-            details: error.message
+        console.error('Query error:', error);
+        res.status(500).json({
+            error: 'Database query failed',
+            details: error.message,
+            code: error.code
         });
     }
 });
 
-// API endpoint to add a comment
-app.post('/api/comments', async (req, res) => {
-    try {
-        const { comment } = req.body;
-        if (!comment) {
-            return res.status(400).json({ error: 'Comment is required' });
-        }
-        await sql`INSERT INTO comments (comment) VALUES (${comment});`;
-        res.json({ message: 'Comment added successfully!', comment });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-// API endpoint to get all comments
-app.get('/api/comments', async (req, res) => {
-    try {
-        const comments = await sql`SELECT * FROM comments ORDER BY id DESC;`;
-        res.json({ comments });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-// Setup endpoint to create the comments table
+// Setup endpoint to create tables
 app.get('/setup', async (req, res) => {
     try {
+        if (!sql) {
+            return res.status(500).json({ error: 'Database not initialized' });
+        }
+        
         await sql`
             CREATE TABLE IF NOT EXISTS comments (
                 id SERIAL PRIMARY KEY,
@@ -60,7 +76,10 @@ app.get('/setup', async (req, res) => {
                 created_at TIMESTAMP DEFAULT NOW()
             );
         `;
-        res.json({ message: '✅ Comments table created successfully in lorraine-db!' });
+        res.json({ 
+            message: '✅ Tables created successfully!',
+            database: 'lorraine-db'
+        });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
