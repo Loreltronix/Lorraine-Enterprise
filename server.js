@@ -17,7 +17,7 @@ const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const sqlite3 = require('sqlite3').verbose();
+const Database = require("better-sqlite3");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -38,7 +38,7 @@ if (!fs.existsSync('uploads')) {
 // ============================================================
 // DATABASE SETUP
 // ============================================================
-const db = new sqlite3.Database('/tmp/lorraine.db', (err) => {
+const db = new Database('/tmp/lorraine.db', (err) => {
     if (err) {
         console.error('Database connection error:', err);
     } else {
@@ -50,7 +50,7 @@ const db = new sqlite3.Database('/tmp/lorraine.db', (err) => {
 function initDatabase() {
     db.serialize(() => {
         // Users table (customers + admins)
-        db.run(`
+        db.prepare(`
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 email TEXT UNIQUE NOT NULL,
@@ -68,7 +68,7 @@ function initDatabase() {
         `);
 
         // Products table
-        db.run(`
+        db.prepare(`
             CREATE TABLE IF NOT EXISTS products (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
@@ -96,7 +96,7 @@ function initDatabase() {
         `);
 
         // Categories table
-        db.run(`
+        db.prepare(`
             CREATE TABLE IF NOT EXISTS categories (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT UNIQUE NOT NULL,
@@ -108,7 +108,7 @@ function initDatabase() {
         `);
 
         // Orders table
-        db.run(`
+        db.prepare(`
             CREATE TABLE IF NOT EXISTS orders (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 order_number TEXT UNIQUE NOT NULL,
@@ -133,7 +133,7 @@ function initDatabase() {
         `);
 
         // Order Items table
-        db.run(`
+        db.prepare(`
             CREATE TABLE IF NOT EXISTS order_items (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 order_id INTEGER NOT NULL,
@@ -149,7 +149,7 @@ function initDatabase() {
         `);
 
         // Order Status History
-        db.run(`
+        db.prepare(`
             CREATE TABLE IF NOT EXISTS order_status_history (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 order_id INTEGER NOT NULL,
@@ -161,7 +161,7 @@ function initDatabase() {
         `);
 
         // Services table (Lorraine Enterprise)
-        db.run(`
+        db.prepare(`
             CREATE TABLE IF NOT EXISTS services (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
@@ -181,7 +181,7 @@ function initDatabase() {
         `);
 
         // Service Enquiries
-        db.run(`
+        db.prepare(`
             CREATE TABLE IF NOT EXISTS service_enquiries (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 service_id INTEGER,
@@ -198,7 +198,7 @@ function initDatabase() {
         `);
 
         // Website Analytics
-        db.run(`
+        db.prepare(`
             CREATE TABLE IF NOT EXISTS analytics (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 page_url TEXT NOT NULL,
@@ -212,7 +212,7 @@ function initDatabase() {
         `);
 
         // Notifications
-        db.run(`
+        db.prepare(`
             CREATE TABLE IF NOT EXISTS notifications (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER,
@@ -226,7 +226,7 @@ function initDatabase() {
         `);
 
         // Settings
-        db.run(`
+        db.prepare(`
             CREATE TABLE IF NOT EXISTS settings (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 key TEXT UNIQUE NOT NULL,
@@ -237,10 +237,10 @@ function initDatabase() {
         `);
 
         // Create default admin if not exists
-        db.get('SELECT * FROM users WHERE email = ?', ['admin@lorraine.com'], (err, row) => {
+        db.prepare('SELECT * FROM users WHERE email = ?', ['admin@lorraine.com'], (err, row) => {
             if (!row) {
                 const hashedPassword = bcrypt.hashSync('Admin@2026', SALT_ROUNDS);
-                db.run(
+                db.prepare(
                     `INSERT INTO users (email, password, full_name, phone, role) VALUES (?, ?, ?, ?, ?)`,
                     ['admin@lorraine.com', hashedPassword, 'System Administrator', '+254794066681', 'admin']
                 );
@@ -249,7 +249,7 @@ function initDatabase() {
         });
 
         // Add sample categories if empty
-        db.get('SELECT COUNT(*) as count FROM categories', (err, row) => {
+        db.prepare('SELECT COUNT(*) as count FROM categories', (err, row) => {
             if (row.count === 0) {
                 const categories = [
                     ['Laptops', 'laptops', 'Premium laptops from top brands'],
@@ -258,14 +258,14 @@ function initDatabase() {
                     ['Repairs', 'repairs', 'Professional repair services']
                 ];
                 categories.forEach(cat => {
-                    db.run(`INSERT INTO categories (name, slug, description) VALUES (?, ?, ?)`, cat);
+                    db.prepare(`INSERT INTO categories (name, slug, description) VALUES (?, ?, ?)`, cat);
                 });
                 console.log('Sample categories created');
             }
         });
 
         // Add sample products if empty
-        db.get('SELECT COUNT(*) as count FROM products', (err, row) => {
+        db.prepare('SELECT COUNT(*) as count FROM products', (err, row) => {
             if (row.count === 0) {
                 const products = [
                     ['Dell Latitude 7400', 'dell-latitude-7400', 'laptops', 'Core i7, 16GB RAM, 512GB SSD, ex-UK', 'Premium business laptop. Grade A ex-UK stock with charger.', 45000, 10, 1, 1, '💻'],
@@ -275,7 +275,7 @@ function initDatabase() {
                     ['Kingston 16GB RAM', 'kingston-16gb-ram', 'accessories', 'DDR4 3200MHz laptop memory', 'Upgrade your laptop performance with high-quality RAM.', 6500, 20, 1, 0, '🧠']
                 ];
                 products.forEach(p => {
-                    db.run(
+                    db.prepare(
                         `INSERT INTO products (name, slug, category, short_description, long_description, price, stock_quantity, available, featured, image_url) 
                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
                         p
@@ -286,7 +286,7 @@ function initDatabase() {
         });
 
         // Add sample services if empty
-        db.get('SELECT COUNT(*) as count FROM services', (err, row) => {
+        db.prepare('SELECT COUNT(*) as count FROM services', (err, row) => {
             if (row.count === 0) {
                 const services = [
                     ['Digital Marketing', 'digital-marketing', 'marketing', 'SEO, ads, and online strategy', 'Full-service digital marketing to grow your online presence and drive sales.', 'quote', null, '📈', 1],
@@ -297,7 +297,7 @@ function initDatabase() {
                     ['Business Solutions', 'business-solutions', 'solutions', 'Strategic digital & creative solutions', 'Practical solutions to help you operate, communicate, and grow effectively.', 'quote', null, '💼', 1]
                 ];
                 services.forEach(s => {
-                    db.run(
+                    db.prepare(
                         `INSERT INTO services (name, slug, category, short_description, long_description, pricing_type, price, image_url, available) 
                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
                         s
@@ -308,7 +308,7 @@ function initDatabase() {
         });
 
         // Add default settings
-        db.get('SELECT COUNT(*) as count FROM settings', (err, row) => {
+        db.prepare('SELECT COUNT(*) as count FROM settings', (err, row) => {
             if (row.count === 0) {
                 const settings = [
                     ['business_name', 'Lorraine'],
@@ -325,7 +325,7 @@ function initDatabase() {
                     ['whatsapp_url', 'https://wa.me/254794066681']
                 ];
                 settings.forEach(s => {
-                    db.run(`INSERT INTO settings (key, value) VALUES (?, ?)`, s);
+                    db.prepare(`INSERT INTO settings (key, value) VALUES (?, ?)`, s);
                 });
                 console.log('Default settings created');
             }
@@ -375,7 +375,7 @@ app.post('/api/auth/register', async (req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
-        db.run(
+        db.prepare(
             `INSERT INTO users (email, password, full_name, phone, address, city, postal_code, role) 
              VALUES (?, ?, ?, ?, ?, ?, ?, 'customer')`,
             [email, hashedPassword, full_name, phone || '', address || '', city || '', postal_code || ''],
@@ -413,7 +413,7 @@ app.post('/api/auth/login', (req, res) => {
         return res.status(400).json({ error: 'Email and password are required.' });
     }
 
-    db.get('SELECT * FROM users WHERE email = ?', [email], async (err, user) => {
+    db.prepare('SELECT * FROM users WHERE email = ?', [email], async (err, user) => {
         if (err || !user) {
             return res.status(401).json({ error: 'Invalid email or password.' });
         }
@@ -448,7 +448,7 @@ app.post('/api/auth/login', (req, res) => {
 
 // Get current user
 app.get('/api/auth/me', authenticateToken, (req, res) => {
-    db.get(
+    db.prepare(
         'SELECT id, email, full_name, phone, address, city, postal_code, country, role, created_at FROM users WHERE id = ?',
         [req.user.id],
         (err, user) => {
@@ -464,7 +464,7 @@ app.get('/api/auth/me', authenticateToken, (req, res) => {
 app.put('/api/auth/me', authenticateToken, (req, res) => {
     const { full_name, phone, address, city, postal_code, country } = req.body;
 
-    db.run(
+    db.prepare(
         `UPDATE users SET full_name = ?, phone = ?, address = ?, city = ?, postal_code = ?, country = ?, updated_at = CURRENT_TIMESTAMP 
          WHERE id = ?`,
         [full_name, phone, address, city, postal_code, country, req.user.id],
@@ -485,7 +485,7 @@ app.put('/api/auth/password', authenticateToken, async (req, res) => {
         return res.status(400).json({ error: 'Current and new password are required.' });
     }
 
-    db.get('SELECT password FROM users WHERE id = ?', [req.user.id], async (err, user) => {
+    db.prepare('SELECT password FROM users WHERE id = ?', [req.user.id], async (err, user) => {
         if (err || !user) {
             return res.status(404).json({ error: 'User not found.' });
         }
@@ -496,7 +496,7 @@ app.put('/api/auth/password', authenticateToken, async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(new_password, SALT_ROUNDS);
-        db.run(
+        db.prepare(
             'UPDATE users SET password = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
             [hashedPassword, req.user.id],
             function(err) {
@@ -561,7 +561,7 @@ app.get('/api/products', (req, res) => {
 
 // Get single product
 app.get('/api/products/:id', (req, res) => {
-    db.get('SELECT * FROM products WHERE id = ?', [req.params.id], (err, product) => {
+    db.prepare('SELECT * FROM products WHERE id = ?', [req.params.id], (err, product) => {
         if (err || !product) {
             return res.status(404).json({ error: 'Product not found.' });
         }
@@ -571,7 +571,7 @@ app.get('/api/products/:id', (req, res) => {
 
 // Get product by slug
 app.get('/api/products/slug/:slug', (req, res) => {
-    db.get('SELECT * FROM products WHERE slug = ?', [req.params.slug], (err, product) => {
+    db.prepare('SELECT * FROM products WHERE slug = ?', [req.params.slug], (err, product) => {
         if (err || !product) {
             return res.status(404).json({ error: 'Product not found.' });
         }
@@ -605,7 +605,7 @@ app.post('/api/admin/products', authenticateToken, isAdmin, (req, res) => {
         return res.status(400).json({ error: 'Name, slug, category, and price are required.' });
     }
 
-    db.run(
+    db.prepare(
         `INSERT INTO products (
             name, slug, category, short_description, long_description,
             price, compare_price, cost_price, sku, barcode,
@@ -640,7 +640,7 @@ app.put('/api/admin/products/:id', authenticateToken, isAdmin, (req, res) => {
         image_url, images, specifications, weight, dimensions
     } = req.body;
 
-    db.run(
+    db.prepare(
         `UPDATE products SET
             name = ?, slug = ?, category = ?, short_description = ?, long_description = ?,
             price = ?, compare_price = ?, cost_price = ?, sku = ?, barcode = ?,
@@ -669,7 +669,7 @@ app.put('/api/admin/products/:id', authenticateToken, isAdmin, (req, res) => {
 
 // Delete product
 app.delete('/api/admin/products/:id', authenticateToken, isAdmin, (req, res) => {
-    db.run('DELETE FROM products WHERE id = ?', [req.params.id], function(err) {
+    db.prepare('DELETE FROM products WHERE id = ?', [req.params.id], function(err) {
         if (err) {
             return res.status(500).json({ error: 'Failed to delete product.' });
         }
@@ -684,7 +684,7 @@ app.delete('/api/admin/products/:id', authenticateToken, isAdmin, (req, res) => 
 app.patch('/api/admin/products/:id/stock', authenticateToken, isAdmin, (req, res) => {
     const { stock_quantity, available } = req.body;
 
-    db.run(
+    db.prepare(
         'UPDATE products SET stock_quantity = ?, available = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
         [stock_quantity, available !== undefined ? available : 1, req.params.id],
         function(err) {
@@ -717,7 +717,7 @@ app.post('/api/orders', (req, res) => {
     // Get user ID if logged in, otherwise null
     const userId = req.user ? req.user.id : null;
 
-    db.run(
+    db.prepare(
         `INSERT INTO orders (
             order_number, user_id, customer_name, customer_email, customer_phone,
             delivery_address, delivery_city, delivery_notes,
@@ -747,13 +747,13 @@ app.post('/api/orders', (req, res) => {
             stmt.finalize();
 
             // Add status history
-            db.run(
+            db.prepare(
                 `INSERT INTO order_status_history (order_id, status, note) VALUES (?, ?, ?)`,
                 [orderId, 'Pending', 'Order placed']
             );
 
             // Create notification for admin
-            db.run(
+            db.prepare(
                 `INSERT INTO notifications (type, title, message, link) VALUES (?, ?, ?, ?)`,
                 ['new_order', 'New Order Received', `Order #${orderNumber} has been placed.`, `/admin/orders/${orderId}`]
             );
@@ -784,7 +784,7 @@ app.get('/api/orders', authenticateToken, (req, res) => {
 
 // Get single order (requires authentication)
 app.get('/api/orders/:id', authenticateToken, (req, res) => {
-    db.get(
+    db.prepare(
         'SELECT * FROM orders WHERE id = ? AND user_id = ?',
         [req.params.id, req.user.id],
         (err, order) => {
@@ -820,7 +820,7 @@ app.get('/api/orders/:id', authenticateToken, (req, res) => {
 
 // Track order by number (public - no auth required)
 app.get('/api/orders/track/:number', (req, res) => {
-    db.get(
+    db.prepare(
         'SELECT * FROM orders WHERE order_number = ?',
         [req.params.number],
         (err, order) => {
@@ -888,7 +888,7 @@ app.get('/api/admin/orders', authenticateToken, isAdmin, (req, res) => {
         // Get item counts for each order
         const ordersWithCounts = orders.map(order => {
             return new Promise((resolve, reject) => {
-                db.get(
+                db.prepare(
                     'SELECT COUNT(*) as item_count, SUM(total) as total_sum FROM order_items WHERE order_id = ?',
                     [order.id],
                     (err, result) => {
@@ -909,7 +909,7 @@ app.get('/api/admin/orders', authenticateToken, isAdmin, (req, res) => {
 
 // Get single order (admin)
 app.get('/api/admin/orders/:id', authenticateToken, isAdmin, (req, res) => {
-    db.get('SELECT * FROM orders WHERE id = ?', [req.params.id], (err, order) => {
+    db.prepare('SELECT * FROM orders WHERE id = ?', [req.params.id], (err, order) => {
         if (err || !order) {
             return res.status(404).json({ error: 'Order not found.' });
         }
@@ -928,7 +928,7 @@ app.get('/api/admin/orders/:id', authenticateToken, isAdmin, (req, res) => {
                     }
 
                     // Get customer details
-                    db.get(
+                    db.prepare(
                         'SELECT id, email, full_name, phone, address, city FROM users WHERE id = ?',
                         [order.user_id],
                         (err, customer) => {
@@ -952,7 +952,7 @@ app.patch('/api/admin/orders/:id/status', authenticateToken, isAdmin, (req, res)
         return res.status(400).json({ error: 'Invalid status.' });
     }
 
-    db.run(
+    db.prepare(
         'UPDATE orders SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
         [status, req.params.id],
         function(err) {
@@ -964,7 +964,7 @@ app.patch('/api/admin/orders/:id/status', authenticateToken, isAdmin, (req, res)
             }
 
             // Add status history
-            db.run(
+            db.prepare(
                 `INSERT INTO order_status_history (order_id, status, note) VALUES (?, ?, ?)`,
                 [req.params.id, status, note || '']
             );
@@ -1011,7 +1011,7 @@ app.get('/api/services', (req, res) => {
 
 // Get single service
 app.get('/api/services/:id', (req, res) => {
-    db.get('SELECT * FROM services WHERE id = ?', [req.params.id], (err, service) => {
+    db.prepare('SELECT * FROM services WHERE id = ?', [req.params.id], (err, service) => {
         if (err || !service) {
             return res.status(404).json({ error: 'Service not found.' });
         }
@@ -1027,7 +1027,7 @@ app.post('/api/service-enquiries', (req, res) => {
         return res.status(400).json({ error: 'Name, email, and phone are required.' });
     }
 
-    db.run(
+    db.prepare(
         `INSERT INTO service_enquiries (service_id, customer_name, customer_email, customer_phone, message, status) 
          VALUES (?, ?, ?, ?, ?, ?)`,
         [service_id || null, customer_name, customer_email, customer_phone, message || '', 'New'],
@@ -1037,7 +1037,7 @@ app.post('/api/service-enquiries', (req, res) => {
             }
 
             // Create notification for admin
-            db.run(
+            db.prepare(
                 `INSERT INTO notifications (type, title, message, link) VALUES (?, ?, ?, ?)`,
                 ['new_enquiry', 'New Service Enquiry', `Enquiry from ${customer_name} about ${service_id ? 'a service' : 'general inquiry'}.`, '/admin/enquiries']
             );
@@ -1096,7 +1096,7 @@ app.patch('/api/admin/enquiries/:id', authenticateToken, isAdmin, (req, res) => 
         return res.status(400).json({ error: 'Invalid status.' });
     }
 
-    db.run(
+    db.prepare(
         'UPDATE service_enquiries SET status = ?, notes = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
         [status, notes || '', req.params.id],
         function(err) {
@@ -1125,7 +1125,7 @@ app.post('/api/admin/services', authenticateToken, isAdmin, (req, res) => {
         return res.status(400).json({ error: 'Name, slug, and category are required.' });
     }
 
-    db.run(
+    db.prepare(
         `INSERT INTO services (
             name, slug, category, short_description, long_description,
             benefits, pricing_type, price, image_url, available, featured
@@ -1154,7 +1154,7 @@ app.put('/api/admin/services/:id', authenticateToken, isAdmin, (req, res) => {
         benefits, pricing_type, price, image_url, available, featured
     } = req.body;
 
-    db.run(
+    db.prepare(
         `UPDATE services SET
             name = ?, slug = ?, category = ?, short_description = ?, long_description = ?,
             benefits = ?, pricing_type = ?, price = ?, image_url = ?, available = ?, featured = ?,
@@ -1180,7 +1180,7 @@ app.put('/api/admin/services/:id', authenticateToken, isAdmin, (req, res) => {
 
 // Delete service (admin)
 app.delete('/api/admin/services/:id', authenticateToken, isAdmin, (req, res) => {
-    db.run('DELETE FROM services WHERE id = ?', [req.params.id], function(err) {
+    db.prepare('DELETE FROM services WHERE id = ?', [req.params.id], function(err) {
         if (err) {
             return res.status(500).json({ error: 'Failed to delete service.' });
         }
@@ -1217,7 +1217,7 @@ app.get('/api/admin/users', authenticateToken, isAdmin, (req, res) => {
         // Get order counts for each user
         const usersWithOrders = users.map(user => {
             return new Promise((resolve, reject) => {
-                db.get(
+                db.prepare(
                     'SELECT COUNT(*) as order_count FROM orders WHERE user_id = ?',
                     [user.id],
                     (err, result) => {
@@ -1245,7 +1245,7 @@ app.post('/api/analytics/track', (req, res) => {
 
     const ip_address = req.ip || req.connection.remoteAddress || '';
 
-    db.run(
+    db.prepare(
         `INSERT INTO analytics (page_url, referrer, user_agent, ip_address, session_id, visitor_id) 
          VALUES (?, ?, ?, ?, ?, ?)`,
         [page_url || '/', referrer || '', user_agent || '', ip_address, session_id || '', visitor_id || '']
@@ -1270,12 +1270,12 @@ app.get('/api/admin/analytics', authenticateToken, isAdmin, (req, res) => {
     }
 
     // Total visitors
-    db.get(`SELECT COUNT(DISTINCT visitor_id) as total_visitors FROM analytics WHERE ${dateFilter}`, (err, total) => {
+    db.prepare(`SELECT COUNT(DISTINCT visitor_id) as total_visitors FROM analytics WHERE ${dateFilter}`, (err, total) => {
         // Unique visitors
-        db.get(`SELECT COUNT(DISTINCT session_id) as unique_visitors FROM analytics WHERE ${dateFilter}`, (err,
+        db.prepare(`SELECT COUNT(DISTINCT session_id) as unique_visitors FROM analytics WHERE ${dateFilter}`, (err,
             unique) => {
             // Page views
-            db.get(`SELECT COUNT(*) as page_views FROM analytics WHERE ${dateFilter}`, (err, views) => {
+            db.prepare(`SELECT COUNT(*) as page_views FROM analytics WHERE ${dateFilter}`, (err, views) => {
                 // Most visited pages
                 db.all(
                     `SELECT page_url, COUNT(*) as views FROM analytics WHERE ${dateFilter} GROUP BY page_url ORDER BY views DESC LIMIT 10`,
@@ -1306,15 +1306,15 @@ app.get('/api/admin/dashboard', authenticateToken, isAdmin, (req, res) => {
     const stats = {};
 
     // Total products
-    db.get('SELECT COUNT(*) as total FROM products', (err, result) => {
+    db.prepare('SELECT COUNT(*) as total FROM products', (err, result) => {
         stats.total_products = result ? result.total : 0;
 
         // Products in stock
-        db.get('SELECT COUNT(*) as in_stock FROM products WHERE stock_quantity > 0', (err, result) => {
+        db.prepare('SELECT COUNT(*) as in_stock FROM products WHERE stock_quantity > 0', (err, result) => {
             stats.products_in_stock = result ? result.in_stock : 0;
 
             // Low stock
-            db.get('SELECT COUNT(*) as low_stock FROM products WHERE stock_quantity > 0 AND stock_quantity <= low_stock_threshold',
+            db.prepare('SELECT COUNT(*) as low_stock FROM products WHERE stock_quantity > 0 AND stock_quantity <= low_stock_threshold',
                 (err, result) => {
                     stats.low_stock_products = result ? result.low_stock : 0;
 
@@ -1323,11 +1323,11 @@ app.get('/api/admin/dashboard', authenticateToken, isAdmin, (req, res) => {
                         stats.orders_by_status = results || [];
 
                         // Total orders
-                        db.get('SELECT COUNT(*) as total FROM orders', (err, result) => {
+                        db.prepare('SELECT COUNT(*) as total FROM orders', (err, result) => {
                             stats.total_orders = result ? result.total : 0;
 
                             // Total revenue
-                            db.get('SELECT SUM(total) as revenue FROM orders WHERE status = "Delivered" OR status = "Completed"',
+                            db.prepare('SELECT SUM(total) as revenue FROM orders WHERE status = "Delivered" OR status = "Completed"',
                                 (err, result) => {
                                     stats.total_revenue = result ? result.revenue : 0;
 
@@ -1352,7 +1352,7 @@ app.get('/api/admin/dashboard', authenticateToken, isAdmin, (req, res) => {
                                                                 recentEnquiries || [];
 
                                                             // Total visitors today
-                                                            db.get(
+                                                            db.prepare(
                                                                 `SELECT COUNT(DISTINCT visitor_id) as today_visitors FROM analytics WHERE DATE(created_at) = DATE('now')`,
                                                                 (err, result) => {
                                                                     stats.visitors_today =
@@ -1401,7 +1401,7 @@ app.put('/api/admin/settings', authenticateToken, isAdmin, (req, res) => {
 
     const queries = Object.keys(settings).map(key => {
         return new Promise((resolve, reject) => {
-            db.run(
+            db.prepare(
                 `INSERT INTO settings (key, value, updated_at) VALUES (?, ?, CURRENT_TIMESTAMP) 
                  ON CONFLICT(key) DO UPDATE SET value = ?, updated_at = CURRENT_TIMESTAMP`,
                 [key, settings[key], settings[key]],
@@ -1438,7 +1438,7 @@ app.get('/api/admin/notifications', authenticateToken, isAdmin, (req, res) => {
 
 // Mark notification as read
 app.patch('/api/admin/notifications/:id/read', authenticateToken, isAdmin, (req, res) => {
-    db.run(
+    db.prepare(
         'UPDATE notifications SET read = 1 WHERE id = ?',
         [req.params.id],
         function(err) {
