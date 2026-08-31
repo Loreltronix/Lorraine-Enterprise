@@ -31,7 +31,7 @@ if (!fs.existsSync('uploads')) {
 // ============================================================
 // DATABASE SETUP
 // ============================================================
-const db = new sqlite3.Database('lorraine.db', (err) => {
+const db = new sqlite3.Database('/tmp/lorraine.db', (err) => {
     if (err) {
         console.error('Database connection error:', err);
     } else {
@@ -1459,6 +1459,14 @@ app.get('/api/whatsapp-link', (req, res) => {
 // ============================================================
 // START SERVER
 // ============================================================
+
+// Export for Vercel
+module.exports = app;
+
+// Only listen locally when not on Vercel
+if (process.env.NODE_ENV !== "production") {
+    const PORT = process.env.PORT || 5000;
+}
 
 // Export for Vercel
 module.exports = app;
