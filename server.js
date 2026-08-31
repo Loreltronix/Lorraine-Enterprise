@@ -446,3 +446,17 @@ app.get('/api/test', (req, res) => {
     });
 });
 // Trigger new deployment - Mon Aug 31 22:28:04 EAT 2026
+
+// ============================================================
+// START SERVER (for local development)
+// ============================================================
+
+// Only listen when running locally (not on Vercel)
+if (process.env.NODE_ENV !== 'production') {
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => {
+        console.log(`🚀 Server running on http://localhost:${PORT}`);
+        console.log(`📧 Email: admin@lorraine.com`);
+        console.log(`🔑 Password: Admin@2026`);
+    });
+}
