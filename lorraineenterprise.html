@@ -2199,17 +2199,29 @@
         document.getElementById('loginBtn')?.addEventListener('click', async () => {
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value.trim();
-
+            
             if (!email || !password) {
                 showToast('Please enter email and password.', 'error');
                 return;
             }
-
+            
             try {
-                const data = await apiRequest('/auth/login', {
+                const response = await fetch('/api/login', {
                     method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
                 });
+                const data = await response.json();
+                if (data.success) {
+                    showToast('Login successful! Welcome ' + data.user.name, 'success');
+                    // You can add redirect here
+                } else {
+                    showToast(data.message || 'Login failed', 'error');
+                }
+            } catch (error) {
+                showToast('Login error: ' + error.message, 'error');
+            }
+        });;
                 setAuth(data.token, data.user);
                 showToast(`Welcome back, ${data.user.full_name}!`, 'success');
 
