@@ -1,0 +1,10 @@
+node_modules
+.DS_Store
+*.swp
+*.db
+uploads
+*.png
+Screenshot*.png
+ChatGPT*.png
+.env
+server.js.backup
