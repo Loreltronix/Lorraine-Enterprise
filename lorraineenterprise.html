@@ -1801,7 +1801,7 @@
 
             // Profile
             try {
-                const userData = await apiRequest('/auth/me');
+                const userData = await apiRequest('/api/auth/me');
                 document.getElementById('profFullName').value = userData.full_name || '';
                 document.getElementById('profEmail').value = userData.email || '';
                 document.getElementById('profPhone').value = userData.phone || '';
@@ -2204,7 +2204,7 @@
             }
 
             try {
-                const data = await apiRequest('/auth/login', {
+                const data = await apiRequest('/api/api/auth/login', {
                     method: 'POST',
                     body: JSON.stringify({ email, password })
                 });
@@ -2235,7 +2235,7 @@
             }
 
             try {
-                const data = await apiRequest('/auth/register', {
+                const data = await apiRequest('/api/api/auth/register', {
                     method: 'POST',
                     body: JSON.stringify({ email, password, full_name, phone, address, city })
                 });
@@ -2624,7 +2624,7 @@
         document.getElementById('profileForm')?.addEventListener('submit', async (e) => {
             e.preventDefault();
             try {
-                await apiRequest('/auth/me', {
+                await apiRequest('/api/auth/me', {
                     method: 'PUT',
                     body: JSON.stringify({
                         full_name: document.getElementById('profFullName').value.trim(),
@@ -2654,7 +2654,7 @@
             }
 
             try {
-                await apiRequest('/auth/password', {
+                await apiRequest('/api/auth/password', {
                     method: 'PUT',
                     body: JSON.stringify({
                         current_password: current,
