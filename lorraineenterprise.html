@@ -1631,13 +1631,13 @@
     </footer>
 
     <!-- ============================================================ -->
-    <!-- JAVASCRIPT - FULL APPLICATION                                -->
+    <!-- JAVASCRIPT - COMPLETE FIXED VERSION                          -->
     <!-- ============================================================ -->
     <script>
         // ============================================================
         // CONFIGURATION
         // ============================================================
-        const API_URL = '';
+        const API_URL = 'http://localhost:5000/api';
         let authToken = localStorage.getItem('lorraine_token');
         let currentUser = null;
 
@@ -1666,7 +1666,7 @@
                 headers['Authorization'] = `Bearer ${authToken}`;
             }
 
-            const response = await fetch(`${endpoint}`, {
+            const response = await fetch(`${API_URL}${endpoint}`, {
                 ...options,
                 headers
             });
@@ -1801,7 +1801,7 @@
 
             // Profile
             try {
-                const userData = await apiRequest('/api/auth/me');
+                const userData = await apiRequest('/auth/me');
                 document.getElementById('profFullName').value = userData.full_name || '';
                 document.getElementById('profEmail').value = userData.email || '';
                 document.getElementById('profPhone').value = userData.phone || '';
@@ -2194,42 +2194,20 @@
         // ============================================================
         // AUTH EVENTS
         // ============================================================
-        
-document.getElementById('loginBtn')?.addEventListener('click', async () => {
-    const email = document.getElementById('loginEmail').value.trim();
-    const password = document.getElementById('loginPassword').value.trim();
+        document.getElementById('loginBtn')?.addEventListener('click', async () => {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
 
-    if (!email || !password) {
-        showToast('Please enter email and password.', 'error');
-        return;
-    }
+            if (!email || !password) {
+                showToast('Please enter email and password.', 'error');
+                return;
+            }
 
-    try {
-        const response = await fetch('/api/auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
-        });
-        
-        const data = await response.json();
-        console.log('Login response:', data);
-        
-        if (response.ok && data.token) {
-            // Store token
-            localStorage.setItem('lorraine_token', data.token);
-            localStorage.setItem('lorraine_user', JSON.stringify(data.user));
-            setAuth(data.token, data.user);
-            showToast(`Welcome back, ${data.user.full_name}!`, 'success');
-            switchPage(data.user.role === 'admin' ? 'admin' : 'dashboard');
-        } else {
-            showToast(data.error || 'Login failed', 'error');
-        }
-    } catch (error) {
-        console.error('Login error:', error);
-        showToast('Login failed: ' + error.message, 'error');
-    }
-});
-
+            try {
+                const data = await apiRequest('/auth/login', {
+                    method: 'POST',
+                    body: JSON.stringify({ email, password })
+                });
                 setAuth(data.token, data.user);
                 showToast(`Welcome back, ${data.user.full_name}!`, 'success');
 
@@ -2257,7 +2235,7 @@ document.getElementById('loginBtn')?.addEventListener('click', async () => {
             }
 
             try {
-                const data = await apiRequest('/api/auth/register', {
+                const data = await apiRequest('/auth/register', {
                     method: 'POST',
                     body: JSON.stringify({ email, password, full_name, phone, address, city })
                 });
@@ -2509,7 +2487,7 @@ document.getElementById('loginBtn')?.addEventListener('click', async () => {
             const sort = document.getElementById(sortId)?.value || 'default';
 
             try {
-                const endpoint = isService ? '/api/services' : '/api/products';
+                const endpoint = isService ? '/services' : '/products';
                 const params = new URLSearchParams();
                 if (category !== 'all') params.append('category', category);
                 if (search) params.append('search', search);
@@ -2558,7 +2536,39 @@ document.getElementById('loginBtn')?.addEventListener('click', async () => {
 
             } catch (error) {
                 grid.innerHTML =
-                    `<p style="grid-column:1/-1;text-align:center;padding:30px;color:#dc2626;">Failed to load items.</p>`;
+                    `<p style="grid-column:1/-1;text-align:center;padding:30px;color:#dc2626;">Failed to load items: ${error.message}</p>`;
+            }
+        }
+
+        // ============================================================
+        // LOAD FEATURED PRODUCTS
+        // ============================================================
+        async function loadFeatured() {
+            const grid = document.getElementById('featuredGrid');
+            try {
+                const data = await apiRequest('/products?featured=true&limit=4');
+                if (!data || data.length === 0) {
+                    grid.innerHTML =
+                        `<p style="grid-column:1/-1;text-align:center;padding:20px;color:#64748b;">No featured products.</p>`;
+                    return;
+                }
+
+                grid.innerHTML = data.map(p => `
+                    <div class="product-card">
+                        <div class="product-image">${p.image_url || '💻'}</div>
+                        <h3>${p.name}</h3>
+                        <div class="category-tag">${p.category}</div>
+                        <div class="price">KSh ${p.price.toLocaleString()}</div>
+                        <div class="short-desc">${p.short_description || ''}</div>
+                        <div class="card-actions">
+                            <button class="btn-accent" onclick="addToCart(${p.id}, '${p.name}', ${p.price}, '${p.image_url || '📦'}')"><i class="fas fa-cart-plus"></i> Add</button>
+                            <a href="https://wa.me/254794066681?text=Hi%20Lorraine%2C%20I'm%20interested%20in%20${encodeURIComponent(p.name)}" target="_blank" class="btn-whatsapp" style="padding:5px 12px;font-size:0.75rem;"><i class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                grid.innerHTML =
+                    `<p style="grid-column:1/-1;text-align:center;padding:20px;color:#64748b;">Failed to load featured products.</p>`;
             }
         }
 
@@ -2568,6 +2578,7 @@ document.getElementById('loginBtn')?.addEventListener('click', async () => {
         loadAuth();
 
         // Load products
+        loadFeatured();
         loadProducts('productGridElectronics', 'searchElectronics', 'categoryElectronics', 'sortElectronics');
         loadProducts('productGridEnterprise', 'searchEnterprise', 'categoryEnterprise', 'sortEnterprise', true);
 
@@ -2646,7 +2657,7 @@ document.getElementById('loginBtn')?.addEventListener('click', async () => {
         document.getElementById('profileForm')?.addEventListener('submit', async (e) => {
             e.preventDefault();
             try {
-                await apiRequest('/api/auth/me', {
+                await apiRequest('/auth/me', {
                     method: 'PUT',
                     body: JSON.stringify({
                         full_name: document.getElementById('profFullName').value.trim(),
@@ -2676,7 +2687,7 @@ document.getElementById('loginBtn')?.addEventListener('click', async () => {
             }
 
             try {
-                await apiRequest('/api/auth/password', {
+                await apiRequest('/auth/password', {
                     method: 'PUT',
                     body: JSON.stringify({
                         current_password: current,
@@ -2695,69 +2706,7 @@ document.getElementById('loginBtn')?.addEventListener('click', async () => {
         console.log('🚀 Lorraine Business Platform loaded!');
         console.log('📧 Admin: admin@lorraine.com');
         console.log('🔑 Password: Admin@2026');
+        console.log('📍 Open your website: http://localhost:5000/lorraineenterprise.html');
     </script>
 </body>
-</html><-- Add DICOM fields to medical_images table
-ALTER TABLE medical_images ADD COLUMN dicom_metadata TEXT;
-ALTER TABLE medical_images ADD COLUMN thumbnail_path TEXT;
-ALTER TABLE medical_images ADD COLUMN study_uid TEXT;
-ALTER TABLE medical_images ADD COLUMN series_uid TEXT;
-ALTER TABLE medical_images ADD COLUMN instance_uid TEXT;
-ALTER TABLE medical_images ADD COLUMN patient_uid TEXT;
-
--- Create annotations table
-CREATE TABLE IF NOT EXISTS annotations (
-    annotation_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    image_id TEXT NOT NULL,
-    user_id INTEGER NOT NULL,
-    annotation_type TEXT CHECK(annotation_type IN ('circle', 'rectangle', 'line', 'text', 'arrow')) NOT NULL,
-    coordinates TEXT NOT NULL,
-    color TEXT DEFAULT '#FF0000',
-    text TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (image_id) REFERENCES medical_images(image_id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
-);
-
--- Create patient portal table
-CREATE TABLE IF NOT EXISTS patient_portal_access (
-    access_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    patient_id TEXT NOT NULL,
-    access_token TEXT UNIQUE NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    expires_at DATETIME,
-    last_access DATETIME,
-    is_active INTEGER DEFAULT 1,
-    FOREIGN KEY (patient_id) REFERENCES patients(patient_id) ON DELETE CASCADE
-);
-
--- Create notifications table
-CREATE TABLE IF NOT EXISTS notifications (
-    notification_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
-    type TEXT CHECK(type IN ('request', 'approval', 'rejection', 'upload', 'system')) NOT NULL,
-    message TEXT NOT NULL,
-    link TEXT,
-    is_read INTEGER DEFAULT 0,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
-);
-
--- Create email_logs table
-CREATE TABLE IF NOT EXISTS email_logs (
-    email_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    recipient TEXT NOT NULL,
-    subject TEXT NOT NULL,
-    body TEXT NOT NULL,
-    status TEXT CHECK(status IN ('sent', 'failed', 'pending')) DEFAULT 'pending',
-    sent_at DATETIME,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
--- Add indexes for performance
-CREATE INDEX idx_annotations_image ON annotations(image_id);
-CREATE INDEX idx_annotations_user ON annotations(user_id);
-CREATE INDEX idx_notifications_user ON notifications(user_id);
-CREATE INDEX idx_notifications_read ON notifications(is_read);
-CREATE INDEX idx_email_logs_status ON FORCE REFRESH: Tue Sep  1 00:47:41 EAT 2026 -->
+</html>
