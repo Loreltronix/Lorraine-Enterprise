@@ -8,7 +8,58 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
     <style>
         /* ===== COMPLETE STYLES ===== */
-        * {
+        
+        /* Logo styles */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .logo-container img {
+            height: 45px;
+            width: auto;
+            border-radius: 8px;
+            object-fit: contain;
+        }
+        .logo-container img:hover {
+            transform: scale(1.05);
+            transition: transform 0.2s;
+        }
+        .logo {
+            font-weight: 800;
+            font-size: 1.4rem;
+            letter-spacing: -0.5px;
+        }
+        .logo small {
+            font-size: 0.6rem;
+            font-weight: 500;
+            color: #64748b;
+            margin-left: 6px;
+        }
+        /* Hero logo */
+        .hero-logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .hero-logo-container img {
+            max-height: 80px;
+            width: auto;
+            border-radius: 12px;
+        }
+        @media (max-width: 768px) {
+            .logo-container img {
+                height: 30px;
+            }
+            .logo {
+                font-size: 1.1rem;
+            }
+            .hero-logo-container img {
+                max-height: 50px;
+            }
+        }
+
+* {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -1117,21 +1168,42 @@
             }
         }
     </style>
+
+    <link rel="icon" href="/images/brand%20icon.png" type="image/png" />
+
 </head>
 <body>
 
     <div class="toast" id="toast"></div>
 
     <!-- Header -->
+    
+    <!-- Header with Logos -->
     <header>
         <div class="container header-inner">
-            <div class="logo">
-                Lorraine<span>.</span>
-                <small>Electronics &amp; Enterprise</small>
+            <div class="logo-container" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+                <!-- Lorraine Electronics Logo (Header) -->
+                <img src="/images/lorraine%20blue%20logo%201%20(1).jpeg" 
+                     alt="Lorraine Electronics" 
+                     style="height:45px;width:auto;border-radius:8px;object-fit:contain;" 
+                     id="headerLogoElectronics" />
+                
+                <!-- Lorraine Enterprise Logo (Header) -->
+                <img src="/images/main%20logo.png" 
+                     alt="Lorraine Enterprise" 
+                     style="height:45px;width:auto;border-radius:8px;object-fit:contain;" 
+                     id="headerLogoEnterprise" />
+                
+                <div class="logo">
+                    Lorraine<span>.</span>
+                    <small>Electronics &amp; Enterprise</small>
+                </div>
             </div>
+            
             <button class="mobile-toggle" id="mobileToggle">
                 <i class="fas fa-bars"></i>
             </button>
+            
             <nav class="nav-links" id="navLinks">
                 <a class="active" data-page="home">Home</a>
                 <a data-page="electronics">Lorraine Electronics</a>
@@ -1146,6 +1218,7 @@
                 <a id="adminNavLink" data-page="admin" class="hidden">Admin</a>
                 <a id="logoutNavLink" class="hidden" style="color:#dc2626;">Logout</a>
             </nav>
+            
             <div class="nav-actions">
                 <a class="cart-icon" id="cartIcon">
                     <i class="fas fa-shopping-cart"></i>
@@ -1154,6 +1227,7 @@
             </div>
         </div>
     </header>
+
 
     <!-- ============================================================ -->
     <!-- PAGE: HOME                                                    -->
