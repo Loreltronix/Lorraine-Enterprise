@@ -1863,6 +1863,7 @@
         // ADMIN - ORDERS
         // ============================================================
         
+        
         async function loadAdminOrders() {
             try {
                 // Define container first
@@ -1918,9 +1919,10 @@
         }
 
 
+
         async function updateOrderStatus(orderId, newStatus) {
             try {
-                await apiRequest(`/admin/orders/${orderId}/status`, {
+                await apiRequest(`/api/admin/orders/${orderId}/status`, {
                     method: 'PATCH',
                     body: JSON.stringify({ status: newStatus, note: `Status updated to ${newStatus}` })
                 });
