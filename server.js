@@ -437,3 +437,219 @@ app.get('/api/orders/track/:orderNumber', async (req, res) => {
         res.status(500).json({ error: 'Failed to track order' });
     }
 });
+
+// ============================================================
+// SETUP PRODUCTS TABLE
+// ============================================================
+
+app.get('/api/setup-products', async (req, res) => {
+    try {
+        if (!sql) {
+            return res.status(500).json({ error: 'Database not connected' });
+        }
+        
+        // Create products table
+        await sql`
+            CREATE TABLE IF NOT EXISTS products (
+                id SERIAL PRIMARY KEY,
+                name TEXT NOT NULL,
+                slug TEXT UNIQUE NOT NULL,
+                price DECIMAL(10,2) NOT NULL,
+                sale_price DECIMAL(10,2),
+                description TEXT,
+                features TEXT,
+                specifications TEXT,
+                category TEXT NOT NULL,
+                stock_quantity INTEGER DEFAULT 0,
+                available BOOLEAN DEFAULT true,
+                main_image TEXT,
+                images TEXT[],
+                created_at TIMESTAMP DEFAULT NOW(),
+                updated_at TIMESTAMP DEFAULT NOW()
+            );
+        `;
+        
+        res.json({ 
+            success: true, 
+            message: '✅ Products table created successfully!'
+        });
+    } catch (error) {
+        console.error('Table creation error:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// ============================================================
+// PRODUCT MANAGEMENT API
+// ============================================================
+
+// Get all products
+app.get('/api/products', async (req, res) => {
+    try {
+        if (!sql) {
+            return res.json([]);
+        }
+        
+        const { category, search, sort, featured, limit } = req.query;
+        let query = sql`SELECT * FROM products WHERE 1=1`;
+        
+        if (category && category !== 'all') {
+            query = sql`${query} AND category = ${category}`;
+        }
+        if (search) {
+            query = sql`${query} AND name ILIKE ${'%' + search + '%'}`;
+        }
+        if (sort === 'price-asc') {
+            query = sql`${query} ORDER BY price ASC`;
+        } else if (sort === 'price-desc') {
+            query = sql`${query} ORDER BY price DESC`;
+        } else {
+            query = sql`${query} ORDER BY created_at DESC`;
+        }
+        if (limit) {
+            query = sql`${query} LIMIT ${parseInt(limit)}`;
+        }
+        
+        const products = await query;
+        res.json(products || []);
+    } catch (error) {
+        console.error('Products fetch error:', error);
+        res.status(500).json({ error: 'Failed to fetch products' });
+    }
+});
+
+// Get single product
+app.get('/api/products/:id', async (req, res) => {
+    try {
+        if (!sql) {
+            return res.status(500).json({ error: 'Database not connected' });
+        }
+        
+        const { id } = req.params;
+        const products = await sql`
+            SELECT * FROM products WHERE id = ${parseInt(id)}
+        `;
+        
+        if (products && products.length > 0) {
+            res.json(products[0]);
+        } else {
+            res.status(404).json({ error: 'Product not found' });
+        }
+    } catch (error) {
+        console.error('Product fetch error:', error);
+        res.status(500).json({ error: 'Failed to fetch product' });
+    }
+});
+
+// Add new product
+app.post('/api/admin/products', async (req, res) => {
+    try {
+        if (!sql) {
+            return res.status(500).json({ error: 'Database not connected' });
+        }
+        
+        const { 
+            name, category, price, sale_price, description, 
+            features, specifications, stock_quantity, available,
+            main_image, images
+        } = req.body;
+        
+        // Generate slug from name
+        const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+        
+        const result = await sql`
+            INSERT INTO products (
+                name, slug, category, price, sale_price, 
+                description, features, specifications, 
+                stock_quantity, available, main_image, images
+            ) VALUES (
+                ${name}, ${slug}, ${category}, ${price}, ${sale_price || null},
+                ${description || ''}, ${features || ''}, ${specifications || ''},
+                ${stock_quantity || 0}, ${available !== false}, ${main_image || ''},
+                ${images || []}::text[]
+            )
+            RETURNING *;
+        `;
+        
+        res.json({ 
+            success: true, 
+            message: 'Product added successfully!',
+            product: result[0]
+        });
+    } catch (error) {
+        console.error('Add product error:', error);
+        res.status(500).json({ error: 'Failed to add product' });
+    }
+});
+
+// Update product
+app.put('/api/admin/products/:id', async (req, res) => {
+    try {
+        if (!sql) {
+            return res.status(500).json({ error: 'Database not connected' });
+        }
+        
+        const { id } = req.params;
+        const { 
+            name, category, price, sale_price, description, 
+            features, specifications, stock_quantity, available,
+            main_image, images
+        } = req.body;
+        
+        const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+        
+        const result = await sql`
+            UPDATE products SET
+                name = ${name},
+                slug = ${slug},
+                category = ${category},
+                price = ${price},
+                sale_price = ${sale_price || null},
+                description = ${description || ''},
+                features = ${features || ''},
+                specifications = ${specifications || ''},
+                stock_quantity = ${stock_quantity || 0},
+                available = ${available !== false},
+                main_image = ${main_image || ''},
+                images = ${images || []}::text[],
+                updated_at = NOW()
+            WHERE id = ${parseInt(id)}
+            RETURNING *;
+        `;
+        
+        if (result && result.length > 0) {
+            res.json({ 
+                success: true, 
+                message: 'Product updated successfully!',
+                product: result[0]
+            });
+        } else {
+            res.status(404).json({ error: 'Product not found' });
+        }
+    } catch (error) {
+        console.error('Update product error:', error);
+        res.status(500).json({ error: 'Failed to update product' });
+    }
+});
+
+// Delete product
+app.delete('/api/admin/products/:id', async (req, res) => {
+    try {
+        if (!sql) {
+            return res.status(500).json({ error: 'Database not connected' });
+        }
+        
+        const { id } = req.params;
+        await sql`
+            DELETE FROM products WHERE id = ${parseInt(id)}
+        `;
+        
+        res.json({ 
+            success: true, 
+            message: 'Product deleted successfully!'
+        });
+    } catch (error) {
+        console.error('Delete product error:', error);
+        res.status(500).json({ error: 'Failed to delete product' });
+    }
+});
