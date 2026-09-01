@@ -107,16 +107,38 @@ app.get('/api/orders/track/:orderNumber', (req, res) => {
 // ADMIN ENDPOINTS
 // ============================================================
 
-app.get('/api/admin/dashboard', (req, res) => {
-    res.json({
-        total_products: 6,
-        products_in_stock: 6,
-        low_stock_products: 0,
-        total_orders: 0,
-        visitors_today: 42,
-        total_revenue: 0,
-        recent_orders: []
-    });
+
+app.get('/api/admin/dashboard', async (req, res) => {
+    try {
+        const { neon } = require('@neondatabase/serverless');
+        const sql = neon(process.env.DATABASE__UNPOOLED);
+        
+        // Get order count
+        const orderCount = await sql`SELECT COUNT(*) as count FROM orders;`;
+        const totalOrders = orderCount[0]?.count || 0;
+        
+        // Get recent orders
+        const recentOrders = await sql`
+            SELECT * FROM orders 
+            ORDER BY created_at DESC 
+            LIMIT 5;
+        `;
+        
+        res.json({
+            total_products: 6,
+            products_in_stock: 6,
+            low_stock_products: 0,
+            total_orders: parseInt(totalOrders),
+            visitors_today: 42,
+            total_revenue: 0,
+            recent_orders: recentOrders || []
+        });
+    } catch (error) {
+        console.error('Dashboard error:', error);
+        res.status(500).json({ error: 'Failed to load dashboard' });
+    }
+});
+
 });
 
 app.get('/api/admin/orders', (req, res) => {
@@ -168,3 +190,56 @@ if (process.env.NODE_ENV !== 'production') {
         console.log('📦 API: http://localhost:' + PORT + '/api/products');
     });
 }
+
+// ============================================================
+// SETUP DATABASE TABLES
+// ============================================================
+
+app.get('/api/setup-orders', async (req, res) => {
+    try {
+        const { neon } = require('@neondatabase/serverless');
+        const sql = neon(process.env.DATABASE__UNPOOLED);
+        
+        // Create orders table
+        await sql`
+            CREATE TABLE IF NOT EXISTS orders (
+                id SERIAL PRIMARY KEY,
+                order_number TEXT UNIQUE NOT NULL,
+                customer_name TEXT NOT NULL,
+                customer_email TEXT,
+                customer_phone TEXT NOT NULL,
+                delivery_address TEXT,
+                delivery_city TEXT,
+                delivery_notes TEXT,
+                items JSONB,
+                subtotal DECIMAL(10,2),
+                delivery_fee DECIMAL(10,2),
+                total DECIMAL(10,2),
+                status TEXT DEFAULT 'Pending',
+                created_at TIMESTAMP DEFAULT NOW(),
+                updated_at TIMESTAMP DEFAULT NOW()
+            );
+        `;
+        
+        // Create order_items table for detailed tracking
+        await sql`
+            CREATE TABLE IF NOT EXISTS order_items (
+                id SERIAL PRIMARY KEY,
+                order_id INTEGER REFERENCES orders(id),
+                product_name TEXT,
+                product_price DECIMAL(10,2),
+                quantity INTEGER,
+                total DECIMAL(10,2)
+            );
+        `;
+        
+        res.json({ 
+            success: true, 
+            message: 'Orders tables created successfully!',
+            tables: ['orders', 'order_items']
+        });
+    } catch (error) {
+        console.error('Table creation error:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
