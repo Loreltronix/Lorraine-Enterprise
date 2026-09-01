@@ -2422,6 +2422,10 @@
         // ============================================================
         // TRACK ORDER
         // ============================================================
+        
+        // ============================================================
+        // TRACK ORDER
+        // ============================================================
         document.getElementById('trackOrderBtn')?.addEventListener('click', async () => {
             const orderNumber = document.getElementById('trackOrderInput').value.trim();
             if (!orderNumber) {
@@ -2430,27 +2434,41 @@
             }
 
             try {
-                const data = await apiRequest(`/api/orders/track/${encodeURIComponent(orderNumber)}`);
+                console.log('🔍 Tracking order:', orderNumber);
+                const response = await fetch(`/api/orders/track/${encodeURIComponent(orderNumber)}`);
+                const data = await response.json();
+                
                 const resultDiv = document.getElementById('trackResult');
-
-                resultDiv.innerHTML = `
-                    <div class="order-card">
-                        <div class="order-header">
-                            <strong>Order #${data.order_number}</strong>
-                            <span class="order-status status-badge status-${data.status.toLowerCase()}">${data.status}</span>
+                
+                if (response.ok && data && data.order_number) {
+                    resultDiv.innerHTML = `
+                        <div class="order-card" style="background:#f8fafc;padding:20px;border-radius:12px;border:1px solid #eef2f6;">
+                            <div class="order-header" style="display:flex;justify-content:space-between;flex-wrap:wrap;">
+                                <strong>Order #${data.order_number}</strong>
+                                <span class="status-badge status-${data.status.toLowerCase()}">${data.status}</span>
+                            </div>
+                            <p><strong>Customer:</strong> ${data.customer_name}</p>
+                            <p><strong>Phone:</strong> ${data.customer_phone || '-'}</p>
+                            <p><strong>Delivery:</strong> ${data.delivery_address || 'Not specified'}</p>
+                            <p><strong>Items:</strong> ${(data.items || []).map(i => `${i.product_name} (x${i.quantity})`).join(', ')}</p>
+                            <p><strong>Total:</strong> KSh ${parseFloat(data.total).toLocaleString()}</p>
+                            <p><strong>Status:</strong> ${data.status}</p>
+                            <p style="margin-top:8px;font-size:0.85rem;color:#64748b;">Order placed: ${new Date(data.created_at).toLocaleString()}</p>
                         </div>
-                        <p><strong>Date:</strong> ${new Date(data.created_at).toLocaleString()}</p>
-                        <p><strong>Customer:</strong> ${data.customer_name} (${data.customer_phone})</p>
-                        <p><strong>Delivery:</strong> ${data.delivery_address}</p>
-                        <p><strong>Items:</strong> ${(data.items || []).map(i => `${i.product_name} (x${i.quantity})`).join(', ')}</p>
-                        <p><strong>Total:</strong> KSh ${data.total.toLocaleString()}</p>
-                    </div>
-                `;
+                    `;
+                    showToast('Order found!', 'success');
+                } else {
+                    resultDiv.innerHTML = `<p style="color:#dc2626;">${data.error || 'Order not found. Please check the order number.'}</p>`;
+                    showToast('Order not found', 'error');
+                }
             } catch (error) {
-                document.getElementById('trackResult').innerHTML =
-                    `<p style="color:#dc2626;">Order not found. Please check the order number.</p>`;
+                console.error('Track error:', error);
+                document.getElementById('trackResult').innerHTML = 
+                    `<p style="color:#dc2626;">Failed to track order: ${error.message}</p>`;
+                showToast('Error tracking order', 'error');
             }
         });
+
 
         // ============================================================
         // CONTACT FORM
