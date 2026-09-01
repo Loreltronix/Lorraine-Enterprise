@@ -10,13 +10,15 @@ app.use(express.static(__dirname));
 console.log('🚀 SERVER STARTING...');
 
 // ============================================================
-// API ROUTES - MUST COME BEFORE HTML ROUTES
+// API ROUTES
 // ============================================================
 
+// Test endpoint
 app.get('/api/test', (req, res) => {
     res.json({ message: '✅ API is working!', timestamp: new Date().toISOString() });
 });
 
+// Products
 app.get('/api/products', (req, res) => {
     console.log('📦 Products API called');
     res.json([
@@ -29,14 +31,19 @@ app.get('/api/products', (req, res) => {
     ]);
 });
 
+// Services
 app.get('/api/services', (req, res) => {
-    console.log('📋 Services API called');
+    console.log('�� Services API called');
     res.json([
         { id: 101, name: 'Digital Marketing', price: 'Custom Quote', category: 'marketing', available: true },
         { id: 102, name: 'Branding Services', price: 'Custom Quote', category: 'branding', available: true },
         { id: 103, name: 'Web Development', price: 'Custom Quote', category: 'solutions', available: true }
     ]);
 });
+
+// ============================================================
+// AUTH ENDPOINTS
+// ============================================================
 
 app.post('/api/auth/login', (req, res) => {
     const { email, password } = req.body;
@@ -64,21 +71,41 @@ app.get('/api/auth/me', (req, res) => {
     res.json({ id: 1, email: 'admin@lorraine.com', full_name: 'Admin', role: 'admin' });
 });
 
-app.put('/api/auth/me', (req, res) => {
-    res.json({ success: true, message: 'Profile updated' });
-});
+// ============================================================
+// ORDERS ENDPOINTS
+// ============================================================
 
-app.put('/api/auth/password', (req, res) => {
-    res.json({ success: true, message: 'Password changed' });
+app.post('/api/orders', (req, res) => {
+    const { customer_name, customer_email, customer_phone, delivery_address, items, total } = req.body;
+    console.log('📦 New order from:', customer_name);
+    
+    res.json({
+        success: true,
+        order_number: 'ORD-' + Date.now(),
+        status: 'Pending',
+        customer_name,
+        customer_email,
+        total: total || 0
+    });
 });
 
 app.get('/api/orders', (req, res) => {
     res.json([]);
 });
 
-app.post('/api/orders', (req, res) => {
-    res.json({ order_number: 'ORD-' + Date.now(), status: 'Pending' });
+app.get('/api/orders/track/:orderNumber', (req, res) => {
+    const { orderNumber } = req.params;
+    res.json({
+        order_number: orderNumber,
+        status: 'Pending',
+        customer_name: 'Test Customer',
+        total: 0
+    });
 });
+
+// ============================================================
+// ADMIN ENDPOINTS
+// ============================================================
 
 app.get('/api/admin/dashboard', (req, res) => {
     res.json({
@@ -108,8 +135,14 @@ app.get('/api/admin/enquiries', (req, res) => {
     res.json([]);
 });
 
+// ============================================================
+// SERVICE ENQUIRIES
+// ============================================================
+
 app.post('/api/service-enquiries', (req, res) => {
-    res.json({ success: true, message: 'Enquiry sent' });
+    const { customer_name, customer_email, message } = req.body;
+    console.log('📧 New enquiry from:', customer_name);
+    res.json({ success: true, message: 'Enquiry sent successfully!' });
 });
 
 // ============================================================
@@ -124,14 +157,8 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'lorraineenterprise.html'));
 });
 
-// ============================================================
-// EXPORT FOR VERCEL
-// ============================================================
 module.exports = app;
 
-// ============================================================
-// LOCAL SERVER
-// ============================================================
 if (process.env.NODE_ENV !== 'production') {
     const PORT = process.env.PORT || 5000;
     app.listen(PORT, () => {

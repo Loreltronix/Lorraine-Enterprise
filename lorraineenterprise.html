@@ -1763,7 +1763,7 @@
             document.getElementById('dashUserName').textContent = currentUser.full_name;
 
             try {
-                const orders = await apiRequest('/orders');
+                const orders = await apiRequest('/api/orders');
                 const container = document.getElementById('dashOrdersOverview');
                 const listContainer = document.getElementById('dashOrdersList');
 
@@ -1815,7 +1815,7 @@
         // ============================================================
         async function loadAdminDashboard() {
             try {
-                const stats = await apiRequest('/admin/dashboard');
+                const stats = await apiRequest('/api/admin/dashboard');
                 const statsContainer = document.getElementById('adminStats');
 
                 statsContainer.innerHTML = `
@@ -2009,7 +2009,7 @@
                 if (price) {
                     const category = prompt('Enter category (laptops/desktops/accessories/repairs):');
                     if (category) {
-                        apiRequest('/admin/products', {
+                        apiRequest('/api/admin/products', {
                             method: 'POST',
                             body: JSON.stringify({
                                 name,
@@ -2035,7 +2035,7 @@
         // ============================================================
         async function loadAdminCustomers() {
             try {
-                const customers = await apiRequest('/admin/users');
+                const customers = await apiRequest('/api/admin/users');
                 const container = document.getElementById('adminCustomersList');
 
                 if (!customers || customers.length === 0) {
@@ -2069,7 +2069,7 @@
         // ============================================================
         async function loadAdminEnquiries() {
             try {
-                const enquiries = await apiRequest('/admin/enquiries');
+                const enquiries = await apiRequest('/api/admin/enquiries');
                 const container = document.getElementById('adminEnquiriesList');
 
                 if (!enquiries || enquiries.length === 0) {
@@ -2359,7 +2359,7 @@
             const total = subtotal + deliveryFee;
 
             try {
-                const result = await apiRequest('/orders', {
+                const result = await apiRequest('/api/orders', {
                     method: 'POST',
                     body: JSON.stringify({
                         customer_name: name,
@@ -2461,7 +2461,7 @@
             }
 
             try {
-                await apiRequest('/service-enquiries', {
+                await apiRequest('/api/service-enquiries', {
                     method: 'POST',
                     body: JSON.stringify({
                         customer_name: name,
