@@ -1862,33 +1862,34 @@
         // ============================================================
         // ADMIN - ORDERS
         // ============================================================
+        
         async function loadAdminOrders() {
-            const filter = document.getElementById('adminOrderFilter')?.value || 'all';
-            const search = document.getElementById('adminOrderSearch')?.value || '';
-
             try {
-                const params = new URLSearchParams();
-                if (filter !== 'all') params.append('status', filter);
-                if (search) params.append('search', search);
-
-                const orders = await apiRequest(`/admin/orders?${params.toString()}`);
+                // Define container first
                 const container = document.getElementById('adminOrdersList');
+                if (!container) {
+                    console.error('adminOrdersList element not found');
+                    return;
+                }
+                
+                const orders = await apiRequest('/api/admin/orders');
+                console.log('Orders loaded:', orders);
 
                 if (!orders || orders.length === 0) {
-                    container.innerHTML = '<p style="color:#64748b;">No orders found.</p>';
+                    container.innerHTML = '<p style="color:#64748b;padding:20px;">No orders found.</p>';
                     return;
                 }
 
                 container.innerHTML = `
                     <table>
-                        <thead><tr><th>Order #</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Action</th></tr></thead>
+                        <thead><tr><th>Order #</th><th>Customer</th><th>Phone</th><th>Total</th><th>Status</th><th>Action</th></tr></thead>
                         <tbody>
                             ${orders.map(o => `
                                 <tr>
                                     <td><strong>#${o.order_number}</strong></td>
                                     <td>${o.customer_name}</td>
-                                    <td>${o.item_count || 0} items</td>
-                                    <td>KSh ${o.total.toLocaleString()}</td>
+                                    <td>${o.customer_phone || '-'}</td>
+                                    <td>KSh ${parseFloat(o.total).toLocaleString()}</td>
                                     <td><span class="status-badge status-${o.status.toLowerCase()}">${o.status}</span></td>
                                     <td>
                                         <select onchange="updateOrderStatus(${o.id}, this.value)" style="padding:4px 8px;border-radius:6px;border:1px solid #d1d9e6;font-size:0.8rem;">
@@ -1908,9 +1909,14 @@
                     </table>
                 `;
             } catch (error) {
-                container.innerHTML = `<p style="color:#dc2626;">Failed to load orders: ${error.message}</p>`;
+                console.error('Orders error:', error);
+                const container = document.getElementById('adminOrdersList');
+                if (container) {
+                    container.innerHTML = `<p style="color:#dc2626;">Failed to load orders: ${error.message}</p>`;
+                }
             }
         }
+
 
         async function updateOrderStatus(orderId, newStatus) {
             try {
