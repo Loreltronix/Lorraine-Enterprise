@@ -9,6 +9,33 @@
     <link rel="icon" href="/images/favicon.png" type="image/png" />
     <style>
         /* ===== COMPLETE STYLES ===== */
+
+        /* Main logo styles */
+        .logo-container img {
+            height: 50px;
+            width: auto;
+            border-radius: 8px;
+            object-fit: contain;
+        }
+        .logo-container img:hover {
+            transform: scale(1.05);
+            transition: transform 0.2s;
+        }
+        .dual-card .icon img {
+            height: 50px;
+            width: auto;
+            border-radius: 8px;
+            object-fit: contain;
+        }
+        @media (max-width: 768px) {
+            .logo-container img {
+                height: 35px;
+            }
+            .dual-card .icon img {
+                height: 35px;
+            }
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -1164,21 +1191,19 @@
     <!-- Header -->
     <header>
         <div class="container header-inner">
+            
             <div class="logo-container">
-                <!-- Lorraine Electronics Logo -->
-                <img src="/images/electronics-logo.jpeg" 
-                     alt="Lorraine Electronics" 
-                     style="height:45px;width:auto;border-radius:8px;object-fit:contain;" />
-                
-                <!-- Lorraine Enterprise Logo -->
-                <img src="/images/enterprise-logo.png" 
+                <!-- Main Logo -->
+                <img src="/images/main-logo.png" 
                      alt="Lorraine Enterprise" 
-                     style="height:45px;width:auto;border-radius:8px;object-fit:contain;" />
+                     style="height:50px;width:auto;border-radius:8px;object-fit:contain;" />
                 
                 <div class="logo">
                     Lorraine<span>.</span>
                     <small>Electronics &amp; Enterprise</small>
                 </div>
+            </div>
+
             </div>
             
             <button class="mobile-toggle" id="mobileToggle">
@@ -1237,14 +1262,14 @@
             <div class="container dual-cta-grid">
                 <div class="dual-card electronics">
                     <div class="badge-label">Lorraine Electronics</div>
-                    <div class="icon">💻</div>
+                    <div class="icon"><img src="/images/main-logo.png" style="height:50px;width:auto;border-radius:8px;" /></div>
                     <h3>Shop Quality Electronics</h3>
                     <p>New &amp; ex-UK/USA laptops, desktops, accessories, and expert repairs.</p>
                     <button class="btn-primary" data-page="electronics"><i class="fas fa-shopping-bag"></i> Explore Lorraine Electronics</button>
                 </div>
                 <div class="dual-card enterprise">
                     <div class="badge-label">Lorraine Enterprise</div>
-                    <div class="icon">🚀</div>
+                    <div class="icon"><img src="/images/main-logo.png" style="height:50px;width:auto;border-radius:8px;" /></div>
                     <h3>Digital &amp; Business Solutions</h3>
                     <p>Branding, marketing, content, design, and IT solutions for growth.</p>
                     <button class="btn-primary" data-page="enterprise"><i class="fas fa-rocket"></i> Explore Lorraine Enterprise</button>
