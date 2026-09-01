@@ -2422,7 +2422,7 @@
             }
 
             try {
-                const data = await apiRequest(`/orders/track/${encodeURIComponent(orderNumber)}`);
+                const data = await apiRequest(`/api/orders/track/${encodeURIComponent(orderNumber)}`);
                 const resultDiv = document.getElementById('trackResult');
 
                 resultDiv.innerHTML = `
