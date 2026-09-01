@@ -2436,7 +2436,7 @@
 
             try {
                 console.log('🔍 Tracking order:', orderNumber);
-                const response = await fetch(`/api/orders/track/${encodeURIComponent(orderNumber)}`);
+                const response = await fetch(`/api/api/orders/track/${encodeURIComponent(orderNumber)}`);
                 
                 if (!response.ok) {
                     const errorData = await response.json();
