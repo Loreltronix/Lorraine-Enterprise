@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
+const { neon } = require('@neondatabase/serverless');
 
 const app = express();
 app.use(cors());
@@ -9,18 +10,26 @@ app.use(express.static(__dirname));
 
 console.log('🚀 SERVER STARTING...');
 
+// Database connection
+let sql = null;
+try {
+    const connectionString = process.env.DATABASE__UNPOOLED || process.env.DATABASE_URL;
+    if (connectionString) {
+        sql = neon(connectionString);
+        console.log('✅ Database connected');
+    } else {
+        console.log('⚠️ No database connection string found');
+    }
+} catch (error) {
+    console.error('❌ Database error:', error.message);
+}
+
 // ============================================================
 // API ROUTES
 // ============================================================
 
-// Test endpoint
-app.get('/api/test', (req, res) => {
-    res.json({ message: '✅ API is working!', timestamp: new Date().toISOString() });
-});
-
 // Products
 app.get('/api/products', (req, res) => {
-    console.log('📦 Products API called');
     res.json([
         { id: 1, name: 'Premium Laptop', price: 45000, category: 'laptops', available: true, stock_quantity: 10 },
         { id: 2, name: 'Gaming Desktop', price: 85000, category: 'desktops', available: true, stock_quantity: 5 },
@@ -33,7 +42,6 @@ app.get('/api/products', (req, res) => {
 
 // Services
 app.get('/api/services', (req, res) => {
-    console.log('�� Services API called');
     res.json([
         { id: 101, name: 'Digital Marketing', price: 'Custom Quote', category: 'marketing', available: true },
         { id: 102, name: 'Branding Services', price: 'Custom Quote', category: 'branding', available: true },
@@ -42,12 +50,12 @@ app.get('/api/services', (req, res) => {
 });
 
 // ============================================================
-// AUTH ENDPOINTS
+// AUTH
 // ============================================================
 
 app.post('/api/auth/login', (req, res) => {
     const { email, password } = req.body;
-    console.log('🔐 Login attempt:', email);
+    console.log('�� Login attempt:', email);
     
     if (email === 'admin@lorraine.com' && password === 'Admin@2026') {
         res.json({
@@ -72,46 +80,128 @@ app.get('/api/auth/me', (req, res) => {
 });
 
 // ============================================================
-// ORDERS ENDPOINTS
+// ORDERS (with Database)
 // ============================================================
 
-app.post('/api/orders', (req, res) => {
-    const { customer_name, customer_email, customer_phone, delivery_address, items, total } = req.body;
-    console.log('📦 New order from:', customer_name);
-    
-    res.json({
-        success: true,
-        order_number: 'ORD-' + Date.now(),
-        status: 'Pending',
-        customer_name,
-        customer_email,
-        total: total || 0
-    });
+app.post('/api/orders', async (req, res) => {
+    try {
+        const { 
+            customer_name, 
+            customer_email, 
+            customer_phone, 
+            delivery_address, 
+            delivery_city, 
+            delivery_notes,
+            items,
+            subtotal,
+            delivery_fee,
+            total
+        } = req.body;
+        
+        console.log('📦 New order from:', customer_name);
+        
+        if (!sql) {
+            // Fallback to in-memory if no database
+            const order = {
+                order_number: 'ORD-' + Date.now(),
+                customer_name: customer_name || 'Guest',
+                customer_email: customer_email || '',
+                customer_phone: customer_phone || '',
+                delivery_address: delivery_address || '',
+                items: items || [],
+                total: total || 0,
+                status: 'Pending'
+            };
+            return res.json(order);
+        }
+        
+        // Generate order number
+        const orderNumber = 'ORD-' + Date.now();
+        
+        // Insert order into database
+        await sql`
+            INSERT INTO orders (
+                order_number,
+                customer_name,
+                customer_email,
+                customer_phone,
+                delivery_address,
+                delivery_city,
+                delivery_notes,
+                items,
+                subtotal,
+                delivery_fee,
+                total,
+                status
+            ) VALUES (
+                ${orderNumber},
+                ${customer_name || 'Guest'},
+                ${customer_email || ''},
+                ${customer_phone || ''},
+                ${delivery_address || ''},
+                ${delivery_city || ''},
+                ${delivery_notes || ''},
+                ${JSON.stringify(items || [])}::jsonb,
+                ${subtotal || 0},
+                ${delivery_fee || 0},
+                ${total || 0},
+                'Pending'
+            );
+        `;
+        
+        res.json({
+            success: true,
+            order_number: orderNumber,
+            status: 'Pending',
+            customer_name,
+            customer_email,
+            total: total || 0
+        });
+    } catch (error) {
+        console.error('Order creation error:', error);
+        res.status(500).json({ 
+            error: 'Failed to place order',
+            details: error.message 
+        });
+    }
 });
 
-app.get('/api/orders', (req, res) => {
-    res.json([]);
-});
-
-app.get('/api/orders/track/:orderNumber', (req, res) => {
-    const { orderNumber } = req.params;
-    res.json({
-        order_number: orderNumber,
-        status: 'Pending',
-        customer_name: 'Test Customer',
-        total: 0
-    });
+app.get('/api/orders', async (req, res) => {
+    try {
+        if (!sql) {
+            return res.json([]);
+        }
+        
+        const orders = await sql`
+            SELECT * FROM orders 
+            ORDER BY created_at DESC 
+            LIMIT 100;
+        `;
+        
+        res.json(orders || []);
+    } catch (error) {
+        console.error('Orders fetch error:', error);
+        res.status(500).json({ error: 'Failed to fetch orders' });
+    }
 });
 
 // ============================================================
-// ADMIN ENDPOINTS
+// ADMIN
 // ============================================================
-
 
 app.get('/api/admin/dashboard', async (req, res) => {
     try {
-        const { neon } = require('@neondatabase/serverless');
-        const sql = neon(process.env.DATABASE__UNPOOLED);
+        if (!sql) {
+            return res.json({
+                total_products: 6,
+                products_in_stock: 6,
+                low_stock_products: 0,
+                total_orders: 0,
+                visitors_today: 42,
+                total_revenue: 0,
+                recent_orders: []
+            });
+        }
         
         // Get order count
         const orderCount = await sql`SELECT COUNT(*) as count FROM orders;`;
@@ -139,14 +229,28 @@ app.get('/api/admin/dashboard', async (req, res) => {
     }
 });
 
-});
-
-app.get('/api/admin/orders', (req, res) => {
-    res.json([]);
+app.get('/api/admin/orders', async (req, res) => {
+    try {
+        if (!sql) {
+            return res.json([]);
+        }
+        
+        const orders = await sql`
+            SELECT * FROM orders 
+            ORDER BY created_at DESC;
+        `;
+        res.json(orders || []);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch orders' });
+    }
 });
 
 app.get('/api/admin/products', (req, res) => {
-    res.json([]);
+    res.json([
+        { id: 1, name: 'Premium Laptop', price: 45000, category: 'laptops', available: true },
+        { id: 2, name: 'Gaming Desktop', price: 85000, category: 'desktops', available: true },
+        { id: 3, name: 'Wireless Headset', price: 3500, category: 'accessories', available: true }
+    ]);
 });
 
 app.get('/api/admin/users', (req, res) => {
@@ -158,47 +262,14 @@ app.get('/api/admin/enquiries', (req, res) => {
 });
 
 // ============================================================
-// SERVICE ENQUIRIES
-// ============================================================
-
-app.post('/api/service-enquiries', (req, res) => {
-    const { customer_name, customer_email, message } = req.body;
-    console.log('📧 New enquiry from:', customer_name);
-    res.json({ success: true, message: 'Enquiry sent successfully!' });
-});
-
-// ============================================================
-// HTML ROUTES
-// ============================================================
-
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'lorraineenterprise.html'));
-});
-
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'lorraineenterprise.html'));
-});
-
-module.exports = app;
-
-if (process.env.NODE_ENV !== 'production') {
-    const PORT = process.env.PORT || 5000;
-    app.listen(PORT, () => {
-        console.log(`🚀 Server running on http://localhost:${PORT}`);
-        console.log('📧 Email: admin@lorraine.com');
-        console.log('🔑 Password: Admin@2026');
-        console.log('📦 API: http://localhost:' + PORT + '/api/products');
-    });
-}
-
-// ============================================================
 // SETUP DATABASE TABLES
 // ============================================================
 
-app.get('/api/setup-orders', async (req, res) => {
+app.get('/api/setup', async (req, res) => {
     try {
-        const { neon } = require('@neondatabase/serverless');
-        const sql = neon(process.env.DATABASE__UNPOOLED);
+        if (!sql) {
+            return res.status(500).json({ error: 'Database not connected' });
+        }
         
         // Create orders table
         await sql`
@@ -221,25 +292,44 @@ app.get('/api/setup-orders', async (req, res) => {
             );
         `;
         
-        // Create order_items table for detailed tracking
-        await sql`
-            CREATE TABLE IF NOT EXISTS order_items (
-                id SERIAL PRIMARY KEY,
-                order_id INTEGER REFERENCES orders(id),
-                product_name TEXT,
-                product_price DECIMAL(10,2),
-                quantity INTEGER,
-                total DECIMAL(10,2)
-            );
-        `;
-        
         res.json({ 
             success: true, 
-            message: 'Orders tables created successfully!',
-            tables: ['orders', 'order_items']
+            message: '✅ Orders table created successfully!',
+            tables: ['orders']
         });
     } catch (error) {
         console.error('Table creation error:', error);
         res.status(500).json({ error: error.message });
     }
 });
+
+// ============================================================
+// TEST
+// ============================================================
+
+app.get('/api/test', (req, res) => {
+    res.json({ message: '✅ API is working!', timestamp: new Date().toISOString() });
+});
+
+// ============================================================
+// HTML ROUTES
+// ============================================================
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'lorraineenterprise.html'));
+});
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'lorraineenterprise.html'));
+});
+
+module.exports = app;
+
+if (process.env.NODE_ENV !== 'production') {
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => {
+        console.log(`🚀 Server running on http://localhost:${PORT}`);
+        console.log('📧 Email: admin@lorraine.com');
+        console.log('🔑 Password: Admin@2026');
+    });
+}
