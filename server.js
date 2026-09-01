@@ -333,3 +333,66 @@ if (process.env.NODE_ENV !== 'production') {
         console.log('🔑 Password: Admin@2026');
     });
 }
+
+// ============================================================
+// ORDER MANAGEMENT
+// ============================================================
+
+// Update order status
+app.put('/api/admin/orders/:orderId/status', async (req, res) => {
+    try {
+        const { orderId } = req.params;
+        const { status, note } = req.body;
+        
+        if (!sql) {
+            return res.status(500).json({ error: 'Database not connected' });
+        }
+        
+        // Update the order status
+        await sql`
+            UPDATE orders 
+            SET 
+                status = ${status || 'Pending'},
+                updated_at = NOW()
+            WHERE id = ${parseInt(orderId)}
+        `;
+        
+        // Get the updated order
+        const updatedOrder = await sql`
+            SELECT * FROM orders WHERE id = ${parseInt(orderId)}
+        `;
+        
+        res.json({
+            success: true,
+            message: `Order status updated to ${status}`,
+            order: updatedOrder[0] || null
+        });
+    } catch (error) {
+        console.error('Status update error:', error);
+        res.status(500).json({ error: 'Failed to update order status' });
+    }
+});
+
+// Get order details
+app.get('/api/admin/orders/:orderId', async (req, res) => {
+    try {
+        const { orderId } = req.params;
+        
+        if (!sql) {
+            return res.status(500).json({ error: 'Database not connected' });
+        }
+        
+        const order = await sql`
+            SELECT * FROM orders WHERE id = ${parseInt(orderId)}
+        `;
+        
+        if (order && order.length > 0) {
+            res.json(order[0]);
+        } else {
+            res.status(404).json({ error: 'Order not found' });
+        }
+    } catch (error) {
+        console.error('Order fetch error:', error);
+        res.status(500).json({ error: 'Failed to fetch order' });
+    }
+});
