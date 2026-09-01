@@ -12,122 +12,62 @@ console.log('🚀 SERVER STARTING...');
 
 // Database connection
 let sql = null;
+let dbConnected = false;
 try {
-    const connectionString = process.env.DATABASE__UNPOOLED || process.env.DATABASE_URL;
+    const connectionString = process.env.DATABASE__UNPOOLED || process.env.DATABASE_URL || process.env.POSTGRES_URL;
+    console.log('🔍 Connection string found:', connectionString ? '✅ YES' : '❌ NO');
+    
     if (connectionString) {
         sql = neon(connectionString);
+        dbConnected = true;
         console.log('✅ Database connected');
     } else {
         console.log('⚠️ No database connection string found');
     }
 } catch (error) {
-    console.error('❌ Database error:', error.message);
+    console.error('❌ Database connection error:', error.message);
 }
 
 // ============================================================
-// API ROUTES - MUST COME FIRST!
+// API ROUTES
 // ============================================================
 
 // Test endpoint
 app.get('/api/test', (req, res) => {
-    res.json({ message: '✅ API is working!', timestamp: new Date().toISOString() });
+    res.json({ 
+        message: '✅ API is working!', 
+        timestamp: new Date().toISOString(),
+        dbConnected: dbConnected
+    });
 });
 
-// Setup products table
-app.get('/api/setup-products', async (req, res) => {
+// Products - with detailed error handling
+app.get('/api/products', async (req, res) => {
+    console.log('📦 Products API called');
+    console.log('📦 dbConnected:', dbConnected);
+    
     try {
-        if (!sql) {
+        if (!dbConnected || !sql) {
+            console.log('❌ No database connection');
             return res.status(500).json({ error: 'Database not connected' });
         }
         
-        await sql`
-            CREATE TABLE IF NOT EXISTS products (
-                id SERIAL PRIMARY KEY,
-                name TEXT NOT NULL,
-                slug TEXT UNIQUE NOT NULL,
-                price DECIMAL(10,2) NOT NULL,
-                sale_price DECIMAL(10,2),
-                description TEXT,
-                features TEXT,
-                specifications TEXT,
-                category TEXT NOT NULL,
-                stock_quantity INTEGER DEFAULT 0,
-                available BOOLEAN DEFAULT true,
-                main_image TEXT,
-                images TEXT[],
-                created_at TIMESTAMP DEFAULT NOW(),
-                updated_at TIMESTAMP DEFAULT NOW()
-            );
+        // Simple query to test connection
+        console.log('📦 Running query...');
+        const products = await sql`
+            SELECT * FROM products ORDER BY created_at DESC;
         `;
+        console.log('📦 Products found:', products ? products.length : 0);
         
-        res.json({ 
-            success: true, 
-            message: '✅ Products table created successfully!'
-        });
-    } catch (error) {
-        console.error('Table creation error:', error);
-        res.status(500).json({ error: error.message });
-    }
-});
-
-// Products
-app.get('/api/products', async (req, res) => {
-    try {
-        if (!sql) {
-            return res.json([]);
-        }
-        
-        const { category, search, sort, featured, limit } = req.query;
-        let query = sql`SELECT * FROM products WHERE 1=1`;
-        
-        if (category && category !== 'all') {
-            query = sql`${query} AND category = ${category}`;
-        }
-        if (search) {
-            query = sql`${query} AND name ILIKE ${'%' + search + '%'}`;
-        }
-        if (sort === 'price-asc') {
-            query = sql`${query} ORDER BY price ASC`;
-        } else if (sort === 'price-desc') {
-            query = sql`${query} ORDER BY price DESC`;
-        } else {
-            query = sql`${query} ORDER BY created_at DESC`;
-        }
-        if (limit) {
-            query = sql`${query} LIMIT ${parseInt(limit)}`;
-        }
-        
-        const products = await query;
         res.json(products || []);
     } catch (error) {
-        console.error('Products fetch error:', error);
-        res.status(500).json({ error: 'Failed to fetch products' });
-    }
-});
-
-app.get('/api/products/:id', async (req, res) => {
-    try {
-        if (!sql) {
-            return res.status(500).json({ error: 'Database not connected' });
-        }
-        
-        const { id } = req.params;
-        console.log('🔍 Fetching product ID:', id);
-        
-        const products = await sql`
-            SELECT * FROM products WHERE id = ${parseInt(id)}
-        `;
-        
-        if (products && products.length > 0) {
-            console.log('✅ Product found:', products[0].name);
-            res.json(products[0]);
-        } else {
-            console.log('❌ Product not found:', id);
-            res.status(404).json({ error: 'Product not found' });
-        }
-    } catch (error) {
-        console.error('Product fetch error:', error);
-        res.status(500).json({ error: 'Failed to fetch product' });
+        console.error('❌ Products error:', error.message);
+        console.error('❌ Error stack:', error.stack);
+        res.status(500).json({ 
+            error: 'Failed to fetch products',
+            details: error.message,
+            stack: error.stack
+        });
     }
 });
 
@@ -155,137 +95,11 @@ app.post('/api/auth/login', (req, res) => {
     }
 });
 
-app.post('/api/auth/register', (req, res) => {
-    const { email, password, full_name } = req.body;
-    res.json({
-        token: 'fake-token-' + Date.now(),
-        user: { id: 2, email, full_name: full_name || 'Customer', role: 'customer' }
-    });
-});
-
-app.get('/api/auth/me', (req, res) => {
-    res.json({ id: 1, email: 'admin@lorraine.com', full_name: 'Admin', role: 'admin' });
-});
-
-// Admin - Products
-app.post('/api/admin/products', async (req, res) => {
-    console.log('📦 Adding new product...');
-    try {
-        if (!sql) {
-            return res.status(500).json({ error: 'Database not connected' });
-        }
-        
-        const { 
-            name, category, price, sale_price, description, 
-            features, specifications, stock_quantity, available,
-            main_image
-        } = req.body;
-        
-        console.log('Product data:', { name, category, price });
-        
-        const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-        
-        const result = await sql`
-            INSERT INTO products (
-                name, slug, category, price, sale_price, 
-                description, features, specifications, 
-                stock_quantity, available, main_image
-            ) VALUES (
-                ${name}, ${slug}, ${category}, ${price}, ${sale_price || null},
-                ${description || ''}, ${features || ''}, ${specifications || ''},
-                ${stock_quantity || 0}, ${available !== false}, ${main_image || ''}
-            )
-            RETURNING *;
-        `;
-        
-        console.log('✅ Product added:', result[0].id);
-        res.json({ 
-            success: true, 
-            message: 'Product added successfully!',
-            product: result[0]
-        });
-    } catch (error) {
-        console.error('Add product error:', error);
-        res.status(500).json({ 
-            error: 'Failed to add product', 
-            details: error.message 
-        });
-    }
-});
-
-app.put('/api/admin/products/:id', async (req, res) => {
-    try {
-        if (!sql) {
-            return res.status(500).json({ error: 'Database not connected' });
-        }
-        
-        const { id } = req.params;
-        const { 
-            name, category, price, sale_price, description, 
-            features, specifications, stock_quantity, available,
-            main_image
-        } = req.body;
-        
-        const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-        
-        const result = await sql`
-            UPDATE products SET
-                name = ${name},
-                slug = ${slug},
-                category = ${category},
-                price = ${price},
-                sale_price = ${sale_price || null},
-                description = ${description || ''},
-                features = ${features || ''},
-                specifications = ${specifications || ''},
-                stock_quantity = ${stock_quantity || 0},
-                available = ${available !== false},
-                main_image = ${main_image || ''},
-                updated_at = NOW()
-            WHERE id = ${parseInt(id)}
-            RETURNING *;
-        `;
-        
-        if (result && result.length > 0) {
-            res.json({ 
-                success: true, 
-                message: 'Product updated successfully!',
-                product: result[0]
-            });
-        } else {
-            res.status(404).json({ error: 'Product not found' });
-        }
-    } catch (error) {
-        console.error('Update product error:', error);
-        res.status(500).json({ error: 'Failed to update product' });
-    }
-});
-
-app.delete('/api/admin/products/:id', async (req, res) => {
-    try {
-        if (!sql) {
-            return res.status(500).json({ error: 'Database not connected' });
-        }
-        
-        const { id } = req.params;
-        await sql`
-            DELETE FROM products WHERE id = ${parseInt(id)}
-        `;
-        
-        res.json({ 
-            success: true, 
-            message: 'Product deleted successfully!'
-        });
-    } catch (error) {
-        console.error('Delete product error:', error);
-        res.status(500).json({ error: 'Failed to delete product' });
-    }
-});
-
-// Admin - Dashboard
+// Admin Dashboard
 app.get('/api/admin/dashboard', async (req, res) => {
+    console.log('📊 Dashboard API called');
     try {
-        if (!sql) {
+        if (!dbConnected || !sql) {
             return res.json({
                 total_products: 0,
                 products_in_stock: 0,
@@ -301,8 +115,8 @@ app.get('/api/admin/dashboard', async (req, res) => {
         const totalProducts = productCount[0]?.count || 0;
         
         res.json({
-            total_products: parseInt(totalProducts),
-            products_in_stock: parseInt(totalProducts),
+            total_products: parseInt(totalProducts) || 0,
+            products_in_stock: parseInt(totalProducts) || 0,
             low_stock_products: 0,
             total_orders: 0,
             visitors_today: 42,
@@ -311,7 +125,15 @@ app.get('/api/admin/dashboard', async (req, res) => {
         });
     } catch (error) {
         console.error('Dashboard error:', error);
-        res.status(500).json({ error: 'Failed to load dashboard' });
+        res.json({
+            total_products: 0,
+            products_in_stock: 0,
+            low_stock_products: 0,
+            total_orders: 0,
+            visitors_today: 42,
+            total_revenue: 0,
+            recent_orders: []
+        });
     }
 });
 
