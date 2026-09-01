@@ -396,3 +396,44 @@ app.get('/api/admin/orders/:orderId', async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch order' });
     }
 });
+
+// ============================================================
+// TRACK ORDER - Customer Facing
+// ============================================================
+
+app.get('/api/orders/track/:orderNumber', async (req, res) => {
+    try {
+        if (!sql) {
+            return res.status(500).json({ error: 'Database not connected' });
+        }
+        
+        const { orderNumber } = req.params;
+        console.log('🔍 Customer tracking order:', orderNumber);
+        
+        const orders = await sql`
+            SELECT 
+                order_number,
+                customer_name,
+                customer_email,
+                customer_phone,
+                delivery_address,
+                delivery_city,
+                items,
+                total,
+                status,
+                created_at
+            FROM orders 
+            WHERE order_number = ${orderNumber}
+            LIMIT 1;
+        `;
+        
+        if (orders && orders.length > 0) {
+            res.json(orders[0]);
+        } else {
+            res.status(404).json({ error: 'Order not found. Please check the order number.' });
+        }
+    } catch (error) {
+        console.error('Track order error:', error);
+        res.status(500).json({ error: 'Failed to track order' });
+    }
+});
