@@ -1305,6 +1305,13 @@
     <!-- ============================================================ -->
     <div class="page" id="page-electronics">
         <section class="hero" style="padding:30px 0 20px;">
+            <!-- Main Logo -->
+            <div style="text-align:center;margin-bottom:20px;">
+                <img src="/images/main-logo.png" 
+                     alt="Lorraine Enterprise" 
+                     style="max-height:80px;width:auto;border-radius:12px;object-fit:contain;" />
+            </div>
+
             <div class="container">
                 
                 <h1 style="font-size:2rem;text-align:center;">Lorraine <span>Electronics</span></h1>
@@ -1401,20 +1408,120 @@
         </div>
     </div>
 
-    <!-- ============================================================ -->
-    <!-- PAGE: ABOUT                                                   -->
-    <!-- ============================================================ -->
-    <div class="page" id="page-about">
-        <div class="container" style="padding:60px 0;max-width:720px;">
-            <h2>About Lorraine Electronics Enterprise</h2>
-            <p style="margin-top:12px;">Lorraine Electronics Enterprise is a trusted provider of premium electronics and professional business solutions. We serve individuals and businesses across Kenya with quality products, expert repairs, creative services, and IT support.</p>
-            <p style="margin-top:12px;">Our two divisions — <strong>Lorraine Electronics</strong> and <strong>Lorraine Enterprise</strong> — work together to deliver a complete experience for our customers.</p>
-            <div style="margin-top:24px;display:flex;gap:16px;flex-wrap:wrap;">
-                <button class="btn-primary" data-page="electronics"><i class="fas fa-laptop"></i> Lorraine Electronics</button>
-                <button class="btn-primary" data-page="enterprise"><i class="fas fa-rocket"></i> Lorraine Enterprise</button>
+    
+<!-- ============================================================ -->
+<!-- PAGE: ABOUT                                                   -->
+<!-- ============================================================ -->
+<div class="page" id="page-about">
+    <section class="about-page" style="padding:40px 0;">
+        <div class="container">
+            <!-- About Header -->
+            <div style="text-align:center;margin-bottom:40px;">
+                <h2 class="section-title" style="font-size:2.5rem;font-weight:800;color:#0b1a2f;">About <span style="color:#2563eb;">Lorraine</span></h2>
+                <p style="font-size:1.1rem;color:#475569;max-width:700px;margin:0 auto;">Electronics &amp; Enterprise solutions for modern businesses and individuals.</p>
+            </div>
+
+            <!-- Mission & Vision -->
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;margin-bottom:40px;">
+                <div style="background:#f8fafc;padding:24px;border-radius:16px;border:1px solid #eef2f6;text-align:center;">
+                    <div style="font-size:2.5rem;margin-bottom:10px;">🎯</div>
+                    <h3 style="font-weight:700;color:#0b1a2f;">Our Mission</h3>
+                    <p style="color:#475569;font-size:0.95rem;margin-top:8px;">To provide quality electronics and professional business solutions that empower individuals and businesses to succeed.</p>
+                </div>
+                <div style="background:#f8fafc;padding:24px;border-radius:16px;border:1px solid #eef2f6;text-align:center;">
+                    <div style="font-size:2.5rem;margin-bottom:10px;">👁️</div>
+                    <h3 style="font-weight:700;color:#0b1a2f;">Our Vision</h3>
+                    <p style="color:#475569;font-size:0.95rem;margin-top:8px;">To become the leading provider of electronics and enterprise solutions in Kenya and beyond.</p>
+                </div>
+                <div style="background:#f8fafc;padding:24px;border-radius:16px;border:1px solid #eef2f6;text-align:center;">
+                    <div style="font-size:2.5rem;margin-bottom:10px;">⭐</div>
+                    <h3 style="font-weight:700;color:#0b1a2f;">Our Values</h3>
+                    <p style="color:#475569;font-size:0.95rem;margin-top:8px;">Quality, Integrity, Innovation, Customer First, Excellence in everything we do.</p>
+                </div>
+            </div>
+
+            <!-- Founder Section with Photo Space -->
+            <div style="display:grid;grid-template-columns:1fr 2fr;gap:40px;background:#f8fafc;border-radius:20px;padding:40px;border:1px solid #eef2f6;margin-bottom:40px;">
+                <!-- Founder Photo Space -->
+                <div style="text-align:center;">
+                    <div style="width:100%;aspect-ratio:1/1;max-width:300px;margin:0 auto;border-radius:50%;border:4px solid #2563eb;overflow:hidden;background:#e8ecf1;display:flex;align-items:center;justify-content:center;">
+                        <!-- ============================================================ -->
+                        <!-- FOUNDER PHOTO - Add your founder photo here -->
+                        <!-- ============================================================ -->
+                        <img src="/images/founder.jpg" 
+                             alt="Founder - Lorraine Enterprise" 
+                             style="width:100%;height:100%;object-fit:cover;"
+                             onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'font-size:6rem;\'>👤</div><p style=\'font-size:0.9rem;color:#64748b;\'>Add Founder Photo<br>Upload to /public/images/founder.jpg</p>'">
+                    </div>
+                    <h3 style="font-weight:700;margin-top:16px;color:#0b1a2f;">Founder's Name</h3>
+                    <p style="color:#2563eb;font-weight:600;">Founder &amp; CEO</p>
+                    <p style="color:#475569;font-size:0.9rem;">Lorraine Electronics Enterprise</p>
+                </div>
+
+                <!-- Founder Story -->
+                <div>
+                    <h3 style="font-weight:700;font-size:1.5rem;color:#0b1a2f;margin-bottom:16px;">About the <span style="color:#2563eb;">Founder</span></h3>
+                    <p style="color:#475569;line-height:1.8;margin-bottom:12px;">
+                        <strong style="color:#0b1a2f;">Lorraine Electronics Enterprise</strong> was founded with a vision to bridge the gap between 
+                        quality electronics and professional business solutions in Kenya. The founder, a passionate entrepreneur with 
+                        a background in technology and business, identified a need for reliable, high-quality products and services 
+                        that cater to both individuals and businesses.
+                    </p>
+                    <p style="color:#475569;line-height:1.8;margin-bottom:12px;">
+                        With a commitment to excellence and customer satisfaction, Lorraine has grown from a small electronics shop 
+                        into a comprehensive business solutions provider, serving hundreds of customers across Kenya.
+                    </p>
+                    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:20px;">
+                        <a href="#contact" class="btn-primary" data-page="contact"><i class="fas fa-envelope"></i> Contact Founder</a>
+                        <a href="https://wa.me/254794066681" target="_blank" class="btn-whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Our Divisions -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-bottom:40px;">
+                <div style="background:#fff;padding:28px;border-radius:16px;border:1px solid #eef2f6;text-align:center;">
+                    <div style="font-size:3rem;margin-bottom:10px;">💻</div>
+                    <h3 style="font-weight:700;color:#0b1a2f;">Lorraine Electronics</h3>
+                    <p style="color:#475569;font-size:0.95rem;margin-top:8px;">Premium laptops, desktops, accessories, and expert repairs.</p>
+                    <button class="btn-primary" data-page="electronics" style="margin-top:12px;"><i class="fas fa-laptop"></i> Explore</button>
+                </div>
+                <div style="background:#fff;padding:28px;border-radius:16px;border:1px solid #eef2f6;text-align:center;">
+                    <div style="font-size:3rem;margin-bottom:10px;">🚀</div>
+                    <h3 style="font-weight:700;color:#0b1a2f;">Lorraine Enterprise</h3>
+                    <p style="color:#475569;font-size:0.95rem;margin-top:8px;">Digital marketing, branding, content, design, and IT solutions.</p>
+                    <button class="btn-primary" data-page="enterprise" style="margin-top:12px;"><i class="fas fa-rocket"></i> Explore</button>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:20px;background:#0b1a2f;border-radius:16px;padding:30px;color:#fff;">
+                <div style="text-align:center;">
+                    <div style="font-size:2.5rem;font-weight:800;color:#2563eb;">5+</div>
+                    <div style="font-size:0.9rem;color:#cbd5e1;">Years of Excellence</div>
+                </div>
+                <div style="text-align:center;">
+                    <div style="font-size:2.5rem;font-weight:800;color:#2563eb;">500+</div>
+                    <div style="font-size:0.9rem;color:#cbd5e1;">Happy Customers</div>
+                </div>
+                <div style="text-align:center;">
+                    <div style="font-size:2.5rem;font-weight:800;color:#2563eb;">2</div>
+                    <div style="font-size:0.9rem;color:#cbd5e1;">Business Divisions</div>
+                </div>
+                <div style="text-align:center;">
+                    <div style="font-size:2.5rem;font-weight:800;color:#2563eb;">100%</div>
+                    <div style="font-size:0.9rem;color:#cbd5e1;">Customer Satisfaction</div>
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <div style="text-align:center;margin-top:40px;">
+                <p style="color:#475569;font-size:1.1rem;margin-bottom:16px;">Ready to work with us? Let's build something great together.</p>
+                <button class="btn-primary" data-page="contact"><i class="fas fa-phone"></i> Get in Touch</button>
             </div>
         </div>
-    </div>
+    </section>
+</div>
 
     <!-- ============================================================ -->
     <!-- PAGE: CONTACT                                                -->
