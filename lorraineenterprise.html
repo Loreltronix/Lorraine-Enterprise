@@ -77,7 +77,57 @@
         ul {
             list-style: none;
         }
-        .container {
+        
+        /* Logo styles */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .header-logo {
+            height: 45px;
+            width: auto;
+            border-radius: 8px;
+            object-fit: contain;
+            transition: transform 0.2s;
+        }
+        .header-logo:hover {
+            transform: scale(1.05);
+        }
+        .hero-logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .hero-logo {
+            max-height: 80px;
+            width: auto;
+            border-radius: 12px;
+            object-fit: contain;
+        }
+        .logo {
+            font-weight: 800;
+            font-size: 1.4rem;
+            letter-spacing: -0.5px;
+        }
+        .logo small {
+            font-size: 0.6rem;
+            font-weight: 500;
+            color: #64748b;
+            margin-left: 6px;
+        }
+        @media (max-width: 768px) {
+            .header-logo {
+                height: 30px;
+            }
+            .logo {
+                font-size: 1.1rem;
+            }
+            .hero-logo {
+                max-height: 50px;
+            }
+        }
+.container {
             max-width: 1280px;
             margin: 0 auto;
             padding: 0 24px;
@@ -1095,7 +1145,57 @@
         }
 
         @media (max-width: 480px) {
-            .container {
+            
+        /* Logo styles */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .header-logo {
+            height: 45px;
+            width: auto;
+            border-radius: 8px;
+            object-fit: contain;
+            transition: transform 0.2s;
+        }
+        .header-logo:hover {
+            transform: scale(1.05);
+        }
+        .hero-logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .hero-logo {
+            max-height: 80px;
+            width: auto;
+            border-radius: 12px;
+            object-fit: contain;
+        }
+        .logo {
+            font-weight: 800;
+            font-size: 1.4rem;
+            letter-spacing: -0.5px;
+        }
+        .logo small {
+            font-size: 0.6rem;
+            font-weight: 500;
+            color: #64748b;
+            margin-left: 6px;
+        }
+        @media (max-width: 768px) {
+            .header-logo {
+                height: 30px;
+            }
+            .logo {
+                font-size: 1.1rem;
+            }
+            .hero-logo {
+                max-height: 50px;
+            }
+        }
+.container {
                 padding: 0 14px;
             }
             .benefits-grid {
@@ -1171,6 +1271,9 @@
 
     <link rel="icon" href="/images/brand%20icon.png" type="image/png" />
 
+
+    <link rel="icon" href="/images/brand%20icon.png" type="image/png" />
+
 </head>
 <body>
 
@@ -1179,20 +1282,20 @@
     <!-- Header -->
     
     <!-- Header with Logos -->
+    
+    <!-- Header -->
     <header>
         <div class="container header-inner">
-            <div class="logo-container" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-                <!-- Lorraine Electronics Logo (Header) -->
+            <div class="logo-container">
+                <!-- Lorraine Electronics Logo -->
                 <img src="/images/lorraine%20blue%20logo%201%20(1).jpeg" 
                      alt="Lorraine Electronics" 
-                     style="height:45px;width:auto;border-radius:8px;object-fit:contain;" 
-                     id="headerLogoElectronics" />
+                     class="header-logo" />
                 
-                <!-- Lorraine Enterprise Logo (Header) -->
+                <!-- Lorraine Enterprise Logo -->
                 <img src="/images/main%20logo.png" 
                      alt="Lorraine Enterprise" 
-                     style="height:45px;width:auto;border-radius:8px;object-fit:contain;" 
-                     id="headerLogoEnterprise" />
+                     class="header-logo" />
                 
                 <div class="logo">
                     Lorraine<span>.</span>
@@ -1227,6 +1330,7 @@
             </div>
         </div>
     </header>
+
 
 
     <!-- ============================================================ -->
